@@ -1,0 +1,196 @@
+:host {
+  display: block;
+}
+
+.comment-count {
+  padding: 8px 0;
+}
+
+.comment-input-container {
+  margin-bottom: 16px;
+}
+
+.comment-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-circle-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.avatar-image-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.comment-input-wrapper {
+  position: relative;
+  border: 1px solid #dadce0;
+  border-radius: 24px;
+  background-color: #f8f9fa;
+  padding: 8px 48px 8px 16px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.comment-input-wrapper:focus-within {
+  border-color: #1a73e8;
+  background-color: white;
+}
+
+.comment-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #202124;
+  padding: 0;
+  outline: none;
+}
+
+.comment-input::placeholder {
+  color: #80868b;
+}
+
+.comment-send-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #1a73e8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.comment-send-btn:hover:not(.disabled) {
+  background-color: #1557b0;
+}
+
+.comment-send-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.comment-item {
+  margin-bottom: 16px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.comment-content-text {
+  color: #202124;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.reply-btn {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.reply-btn:hover {
+  color: #1557b0;
+  text-decoration: underline;
+}
+
+.replies {
+  margin-left: 48px;
+  margin-top: 12px;
+  padding-left: 16px;
+  border-left: 2px solid #e8eaed;
+}
+
+.reply-item {
+  margin-bottom: 12px;
+}
+
+.reply-form {
+  margin-top: 8px;
+  padding-left: 16px;
+  border-left: 2px solid #e8eaed;
+}
+
+.edit-form textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 8px;
+}
+
+.edit-form textarea:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.edit-form .flex {
+  gap: 8px;
+}
+
+.edit-form button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-form button[class*="bg-blue"] {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.edit-form button[class*="bg-blue"]:hover {
+  background-color: #1557b0;
+}
+
+.edit-form button[class*="bg-gray"] {
+  background-color: #f1f3f4;
+  color: #202124;
+}
+
+.edit-form button[class*="bg-gray"]:hover {
+  background-color: #e8eaed;
+}

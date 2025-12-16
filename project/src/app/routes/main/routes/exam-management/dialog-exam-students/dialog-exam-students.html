@@ -1,0 +1,49 @@
+<dialog closedby="none" #_exam_students class="min-w-840" (close)="onClose()">
+  <div class="max-h-[80vh] overflow-y-auto">
+    <div class="grid grid-cols-[1fr_auto] items-start gap-x-10 px-16 pt-16">
+      <div>
+        <div class="text-24 font-bold">Danh sách học sinh</div>
+        <div class="text-14 text-gray-500 mt-4">
+          {{ exam().examName }} • {{ exam().subjectName }} • {{ exam().className }}
+        </div>
+      </div>
+      <button type="button" class="self-start __btn-img" (click)="onOkCancel()">
+        <img src="image/close-icon-black.svg" alt="close" class="w-24 h-24" />
+      </button>
+    </div>
+
+    <app-table [columns]="studentColumns"
+              [dataSource]="studentRows"
+              [showPaging]="false"
+              [totalElements]="studentRows.length"
+              [isLoading]="isLoadingStudents"
+              [type]="'exam-students-table'"
+              (actionClicked)="onStudentActionClick($event)">
+    </app-table>
+
+    @if (selectedStudent) {
+      <div class="border-t border-gray-200 mt-20">
+        <div class="flex justify-between items-center mb-12">
+          <div>
+            <div class="text-18 font-semibold">Log vi phạm - {{ selectedStudent.studentName }}</div>
+            <div class="text-12 text-gray-500">Email: {{ selectedStudent.studentEmail }}</div>
+          </div>
+          <button type="button" class="px-12 py-6 text-14 text-gray-600 hover:text-gray-800" (click)="clearSelectedStudent()">
+            Đóng log
+          </button>
+        </div>
+
+        <app-table [columns]="violationColumns"
+                  [dataSource]="violationRows"
+                  [showPaging]="false"
+                  [totalElements]="violationRows.length"
+                  [isLoading]="isLoadingViolations">
+        </app-table>
+      </div>
+    }
+  </div>
+  <fieldset class="m-0 flex justify-end gap-x-6 border-t border-x-0 border-b-0 border-gray-dd p-16">
+    <button type="button" class="min-w-120 __btn-1" (click)="onOkCancel()">Đóng</button>
+  </fieldset>
+</dialog>
+

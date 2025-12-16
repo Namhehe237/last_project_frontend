@@ -1,0 +1,183 @@
+<div class="post-card bg-white rounded-8 shadow-sm mb-16">
+  <div class="p-16">
+    <div class="flex items-start gap-x-12 mb-16">
+      <!-- Avatar -->
+      <div class="post-avatar">
+        @if (post().teacherAvatarUrl) {
+          <img [src]="post().teacherAvatarUrl" [alt]="post().teacherName" class="avatar-image" (error)="onAvatarError($event)">
+        } @else {
+          <div class="avatar-circle">
+            {{ getInitials(post().teacherName) }}
+          </div>
+        }
+      </div>
+
+      <!-- Post Header -->
+      <div class="flex-1">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <div class="text-14 font-semibold text-gray-900">{{ post().teacherName }}</div>
+            <div class="text-12 text-gray-600 flex items-center gap-x-4">
+              <span>{{ formatDate(post().createdAt) }}</span>
+              @if (post().postType === 'ASSIGNMENT') {
+                <span>•</span>
+                <span class="font-medium">Bài tập</span>
+                @if (post().dueDate) {
+                  <span>•</span>
+                  <span>Hết hạn: {{ formatDate(post().dueDate) }}</span>
+                }
+                @if (post().totalPoints) {
+                  <span>•</span>
+                  <span>{{ post().totalPoints }} điểm</span>
+                }
+              } @else {
+                <span>•</span>
+                <span class="font-medium">Thông báo</span>
+              }
+            </div>
+          </div>
+          @if (isAuthor) {
+            <div class="post-menu">
+              <button type="button" class="menu-icon" (click)="startEdit()" title="Sửa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button type="button" class="menu-icon text-red-600" (click)="deletePost()" title="Xóa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Edit Form -->
+        @if (isEditing) {
+          <div class="edit-form mb-16">
+            <input type="text" [(ngModel)]="editTitle" class="edit-input mb-8" placeholder="Tiêu đề">
+            <textarea [(ngModel)]="editContent" class="edit-input mb-8" rows="4" placeholder="Nội dung"></textarea>
+            @if (isAssignment) {
+              <input type="datetime-local" [(ngModel)]="editDueDate" class="edit-input mb-8">
+              <input type="number" [(ngModel)]="editTotalPoints" class="edit-input mb-8" placeholder="Điểm tối đa" min="0" step="0.1">
+            }
+            <div class="flex gap-x-8">
+              <button type="button" class="btn-primary" (click)="saveEdit()">Lưu</button>
+              <button type="button" class="btn-secondary" (click)="cancelEdit()">Hủy</button>
+            </div>
+          </div>
+        } @else {
+          <!-- Post Title - Clickable for assignments -->
+          @if (post().title) {
+            @if (isAssignment) {
+              <h3 class="text-16 font-semibold text-gray-900 mb-8 cursor-pointer hover:text-blue-600 transition-colors" 
+                  role="button"
+                  tabindex="0"
+                  (click)="openDetailDialog()"
+                  (keyup.enter)="openDetailDialog()"
+                  (keyup.space)="openDetailDialog()">
+                {{ post().title }}
+              </h3>
+            } @else {
+              <h3 class="text-16 font-semibold text-gray-900 mb-8">{{ post().title }}</h3>
+            }
+          }
+
+          <!-- Post Content -->
+          <div class="post-content mb-16">
+            @for (part of extractUrls(post().content); track $index) {
+              @if (part.isUrl) {
+                <a [href]="part.text" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+                  {{ part.text }}
+                </a>
+              } @else {
+                <span class="whitespace-pre-wrap">{{ part.text }}</span>
+              }
+            }
+          </div>
+
+          <!-- Attachment Download Link -->
+          @if (post().attachmentUrl) {
+            <div class="mb-16">
+              <a [href]="post().attachmentUrl" 
+                 [download]="getAttachmentFileName(post().attachmentUrl)"
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-x-8 px-16 py-8 bg-gray-50 text-gray-700 rounded-4 hover:bg-gray-100 transition-colors text-14">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>{{ getAttachmentFileName(post().attachmentUrl) }}</span>
+              </a>
+            </div>
+          }
+
+          <!-- Assignment Actions -->
+          @if (isAssignment) {
+            <div class="mb-16 flex gap-x-8">
+              <button type="button" 
+                      class="px-16 py-8 __btn-2-sm text-14 hover:bg-blue-200 transition-colors" 
+                      (click)="openDetailDialog()">
+                Xem chi tiết
+              </button>
+              @if (canSubmit) {
+                <div class="relative inline-block group">
+                <button type="button" 
+                        class="__btn-1-sm bg-[#34a853] hover:bg-[rgb(53,121,71)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed" 
+                        [disabled]="isPastDue"
+                        (click)="openSubmitDialog(); $event.stopPropagation()">
+                  Nộp bài
+                </button>
+                @if (isPastDue) {
+                  <div role="tooltip" class="w-200 absolute z-10 left-1/2 -translate-x-1/2 mt-4 p-6 bg-[#fff] rounded-8 shadow-[2px_2px_24px_0_rgba(219,229,234,0.6)] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200">
+                    <div class="relative z-10 space-y-8 text-center">
+                      <span class="text-14 text-color-invaild font-bold">Đã quá hạn nộp bài.</span>
+                    </div>
+                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-[#fff]"></div>
+                  </div>
+                }
+              </div>
+              }
+              @if (post().isSubmitted && isAssignment && !isAuthor) {
+                <div class="pt-7 border-0 text-14 text-green-700">
+                  ✓ Đã nộp bài
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Comment Section -->
+  <div class="border-t border-gray-200 pt-16 px-16 pb-16">
+    <app-comment-section 
+      [postId]="post().postId"
+      [commentCount]="post().commentCount"
+      (commentCountChanged)="postUpdated.emit()">
+    </app-comment-section>
+  </div>
+
+  @if (showSubmitDialog()) {
+    <app-assignment-submit-dialog
+      #submitDialog
+      [assignmentId]="post().postId"
+      (submitted)="onSubmissionSubmitted()"
+      (closed)="onDialogClosed()">
+    </app-assignment-submit-dialog>
+  }
+
+  @if (showDetailDialog()) {
+    <app-assignment-detail-dialog
+      #detailDialog
+      [post]="post()"
+      [isAuthor]="isAuthor"
+      (closed)="onDetailDialogClosed()">
+    </app-assignment-detail-dialog>
+  }
+</div>
+

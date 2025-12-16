@@ -1,0 +1,73 @@
+<dialog closedby="none" #_add_user class="min-w-756" (close)="onClose()">
+    <div class="p-16">
+		<div class="grid grid-cols-[1fr_auto] gap-x-10">
+			<b class="text-24">Thêm người dùng</b>
+			<button type="button" class="self-start __btn-img" (click)="onOkCancel()">
+  			<img src="image/close-icon-black.svg" alt="close" class="w-24 h-24"/>
+			</button>
+		</div>
+	
+		<form class="mt-16 mb-16" [formGroup]="form">
+			<div class="grid gap-y-26">
+          <label class="__fg">
+            <span data-label>Email</span>
+            <input type="text" required pattern="\S*" autocomplete="email" formControlName="email" class="__fc">
+            @if (form.get('email')?.touched && form.get('email')?.errors) {
+              <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+                @if (form.get('email')?.errors?.['required']) {
+                  Email là bắt buộc
+                } @else if (form.get('email')?.errors?.['email']) {
+                  Vui lòng nhập địa chỉ email hợp lệ
+                }
+              </div>
+            }
+          </label>
+
+          <label class="__fg">
+            <span data-label>Mật khẩu</span>
+            <input type="password" formControlName="password" class="__fc" required>
+            @if (form.get('password')?.touched && form.get('password')?.errors) {
+              <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+                @if (form.get('password')?.errors?.['required']) {
+                  Mật khẩu là bắt buộc
+                } @else if (form.get('password')?.errors?.['minlength']) {
+                  Mật khẩu phải có ít nhất 6 ký tự
+                }
+              </div>
+            }
+          </label>
+
+          <label class="__fg">
+            <span data-label>Họ và tên</span>
+            <input type="text" formControlName="fullName" class="__fc" required>
+            @if (form.get('fullName')?.touched && form.get('fullName')?.errors?.['required']) {
+              <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">Họ và tên là bắt buộc</div>
+            }
+          </label>
+
+          <label class="__fg">
+            <span data-label>Số điện thoại</span>
+            <input type="text" formControlName="phoneNumber" class="__fc">
+            @if (form.get('phoneNumber')?.touched && form.get('phoneNumber')?.errors?.['phoneNumber']) {
+              <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">Số điện thoại phải có đúng 10 chữ số</div>
+            }
+          </label>
+
+          <label class="__fg">
+            <span data-label>Vai trò</span>
+            <select formControlName="role" class="__fc">
+              @for (r of roles; track r) {
+              <option [value]="r">{{ r }}</option>
+              }
+            </select>
+            @if (form.get('role')?.touched && form.get('role')?.errors?.['required']) {
+              <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">Vai trò là bắt buộc</div>
+            }
+          </label>
+        </div>
+		</form>
+	</div>
+    <fieldset class="m-0 flex justify-end gap-x-6 border-t border-x-0 border-b-0 border-gray-dd p-16" [disabled]="status() === 1">
+		<button type="button" class="min-w-120 __btn-1" [class]="{'__spinner-1': status() === 1}" [disabled]="form.invalid || status() === 1" (click)="onSubmit()">Xác nhận</button>
+	</fieldset>
+</dialog>

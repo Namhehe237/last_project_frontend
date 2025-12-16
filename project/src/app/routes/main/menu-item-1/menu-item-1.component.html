@@ -1,0 +1,15 @@
+<a class="grid items-center grid-cols-[24px_1fr] gap-x-11 min-h-[53px] pt-2 pr-2 pb-2 pl-12 rounded-12 _hover-1 no-underline text-black outline-color-2" [routerLink]="link()" routerLinkActive="_active-1">
+	<svg viewBox="0 0 24 24">
+		@switch (label()) {
+			@case ('Placeholder') {
+				<g>
+					<g class="fill-gray-99">
+						<path d="M13.122 4a8.069 8.069 0 0 0-8.347 8H3.161a.439.439 0 0 0-.316.756l2.515 2.488a.451.451 0 0 0 .64 0l2.515-2.489A.444.444 0 0 0 8.191 12H6.577a6.266 6.266 0 0 1 6.4-6.222 6.346 6.346 0 0 1 6.22 6.133 6.311 6.311 0 0 1-10.168 5 .906.906 0 0 0-1.19.071.88.88 0 0 0 .072 1.318A8.121 8.121 0 0 0 21 11.769 8.152 8.152 0 0 0 13.122 4zm-.46 4.445a.676.676 0 0 0-.676.667v3.271a.9.9 0 0 0 .442.764l2.813 1.644a.688.688 0 0 0 .928-.231.668.668 0 0 0-.234-.916l-2.6-1.52V9.1a.675.675 0 0 0-.676-.658z"/>
+					</g>
+				</g>
+			}
+		}
+	</svg>
+	
+	<span class="text-14">{{label()}}</span>
+</a>

@@ -1,0 +1,35 @@
+._notification {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  min-width: 320px;
+  max-width: 90vw;
+  background: #222;
+  color: #fff;
+  border-radius: 8px;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  font-size: 1.1rem;
+  z-index: 9999;
+}
+
+._notification ._icon {
+  color: #4caf50;
+  font-size: 1.5rem;
+  margin-right: 12px;
+}
+
+._notification.success { 
+  background: #222; 
+}
+
+._notification.error { 
+  background: #b71c1c; 
+}
+
+._notification.info { 
+  background: #1976d2; 
+} 

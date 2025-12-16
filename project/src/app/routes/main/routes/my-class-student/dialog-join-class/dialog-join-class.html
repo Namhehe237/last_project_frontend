@@ -1,0 +1,22 @@
+<dialog closedby="none" #_join_class class="min-w-756" (close)="onClose()">
+    <div class="p-16">
+		<div class="grid grid-cols-[1fr_auto] gap-x-10">
+			<b class="text-24">Join Class</b>
+			<button type="button" class="self-start __btn-img" (click)="onOkCancel()">
+  			<img src="image/close-icon-black.svg" alt="close" class="w-[24px] h-[24px]"/>
+			</button>
+		</div>
+	
+		<form class="mt-16 mb-16" [formGroup]="form">
+			<div class="grid gap-y-26">
+          <label class="__fg">
+            <span data-label>Class Code</span>
+            <input type="text" required formControlName="classCode" class="__fc" placeholder="Enter class code">
+          </label>
+        </div>
+		</form>
+	</div>
+    <fieldset class="m-0 flex justify-end gap-x-6 border-t-1 border-x-0 border-b-0 border-gray-dd p-16" [disabled]="status() === 1">
+		<button type="button" class="min-w-120 __btn-1" [class]="{'__spinner-1': status() === 1}" (click)="onSubmit()">Submit</button>
+	</fieldset>
+</dialog>

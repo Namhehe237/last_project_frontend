@@ -1,0 +1,13 @@
+<div class="border-[#fff] rounded-16 bg-white">
+	<app-table [columns]="columns"
+                [dataSource]="students"
+    			[showPaging]="true"
+                [totalElements]="totalElements"
+    			[isLoading]="isLoading"
+				(reloadData)="reloadData()"
+                [type]="'user-table'"
+				(actionClicked)="onActionClick($event)"
+    			#dataTable
+  ></app-table>
+</div>
+

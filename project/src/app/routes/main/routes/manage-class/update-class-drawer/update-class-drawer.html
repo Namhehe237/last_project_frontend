@@ -1,0 +1,75 @@
+<div class="update-class-drawer px-24 py-16 rounded-16 mt-16">
+  <form [formGroup]="updateForm" (ngSubmit)="onUpdateClass()" class="space-y-20">
+    <div class="form-group">
+      <label for="className" class="form-label">Tên lớp học</label>
+      <input
+        type="text"
+        id="className"
+        formControlName="className"
+        class="form-input"
+        placeholder="Nhập tên lớp học"
+        [class.error]="updateForm.get('className')?.invalid && updateForm.get('className')?.touched"
+      />
+      @if (updateForm.get('className')?.touched && updateForm.get('className')?.errors) {
+        <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+          @if (updateForm.get('className')?.errors?.['required']) {
+            Tên lớp học là bắt buộc
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="classCode" class="form-label">Mã lớp học</label>
+      <input
+        type="text"
+        id="classCode"
+        formControlName="classCode"
+        class="form-input"
+        placeholder="Nhập mã lớp học"
+        [class.error]="updateForm.get('classCode')?.invalid && updateForm.get('classCode')?.touched"
+      />
+      @if (updateForm.get('classCode')?.touched && updateForm.get('classCode')?.errors) {
+        <div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+          @if (updateForm.get('classCode')?.errors?.['required']) {
+            Mã lớp học là bắt buộc
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="form-label">Mô tả</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-textarea"
+        placeholder="Nhập mô tả lớp học"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="__btn-2 w-124"
+        (click)="onClose()"
+        [disabled]="isLoading"
+      >
+        Hủy
+      </button>
+      <button
+        type="submit"
+        class="__btn-1 w-124"
+        [disabled]="isUpdateDisabled()"
+      >
+        @if (isLoading) {
+          <span class="loading-spinner"></span>
+          Đang cập nhật...
+        } @else {
+          Cập nhật
+        }
+      </button>
+    </div>
+  </form>
+</div>

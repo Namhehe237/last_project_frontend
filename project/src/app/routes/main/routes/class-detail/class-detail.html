@@ -1,0 +1,122 @@
+<div class="text-24 font-bold mb-16 mt-4">
+  Chi tiết lớp học
+</div>
+
+@if (isLoading) {
+  <div class="border-[#fff] rounded-16 bg-white p-24 text-center">
+    <div class="flex justify-center items-center py-40">
+      <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+    </div>
+    <p class="text-14 text-gray-600">Đang tải thông tin lớp học...</p>
+  </div>
+}
+
+@if (!isLoading && !classDetail) {
+  <div class="border-[#fff] rounded-16 bg-white p-24 text-center">
+    <div class="text-gray-500">
+      <svg class="mx-auto h-48 w-48 text-gray-400 mb-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+      </svg>
+      <p class="text-16 text-gray-600">Không thể tải thông tin lớp học</p>
+    </div>
+  </div>
+}
+
+@if (!isLoading && classDetail) {
+  <div class="border-[#fff] rounded-16 bg-white mt-24">
+    <div class="relative">
+      <app-card-header [tabList]="tabList" 
+                       [type]="'tab'" 
+                       (tabSelected)="onChangeTab($event)"
+                       [currentTab]="tab">
+      </app-card-header>
+      @if (tab.value === 'feed' && !isStudent) {
+        <button type="button" 
+                class="__btn-2-sm absolute right-24 top-8 px-16 py-8 bg-green-100 hover:bg-green-200 text-14 z-10"
+                (click)="openCreatePostDialog()">
+          + Đăng bài
+        </button>
+      }
+    </div>
+    
+    @if (tab.value === 'class-info') {
+      <div class="p-24">
+        <div class="grid grid-cols-2 gap-8">
+          <div class="space-y-16">
+            <h3 class="text-18 font-bold text-gray-800 mb-12">Thông tin lớp học</h3>
+            
+            <div class="space-y-12">
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Mã lớp:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.classCode || '-' }}</span>
+              </div>
+              
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Tên lớp:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.className || '-' }}</span>
+              </div>
+              
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Số học sinh:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.studentCount || 0 }}</span>
+              </div>
+              
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Mô tả:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.description || 'Không có mô tả' }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-16">
+            <h3 class="text-18 font-bold text-gray-800 mb-12">Thông tin giáo viên</h3>
+            
+            <div class="space-y-12">
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Tên giáo viên:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.teacherName || '-' }}</span>
+              </div>
+              
+              <div class="flex items-center">
+                <span class="text-14 font-semibold text-gray-600 w-120">Email:</span>
+                <span class="text-14 text-gray-800 font-medium">{{ classDetail.teacherEmail || '-' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    
+    @if (tab.value === 'feed') {
+      <div class="p-24">
+        <app-class-feed [classId]="classId!" #feedComponent></app-class-feed>
+      </div>
+    }
+    
+    @if (tab.value === 'students') {
+        <app-table [columns]="studentColumns"
+                    [dataSource]="students"
+                    [showPaging]="true"
+                    [totalElements]="totalStudents"
+                    [isLoading]="isLoadingStudents"
+                    (reloadData)="loadStudents()"
+                    [type]="'user-table'"
+                    (actionClicked)="onStudentActionClick($event)"
+                    #studentTable>
+        </app-table>
+    }
+    
+    @if (tab.value === 'requests' && !isStudent) {
+        <app-table [columns]="requestColumns"
+                    [dataSource]="requests"
+                    [showPaging]="true"
+                    [totalElements]="totalRequests"
+                    [isLoading]="isLoadingRequests"
+                    (reloadData)="loadRequests()"
+                    [type]="'request-table'"
+                    (actionClicked)="onRequestActionClick($event)"
+                    #requestTable>
+        </app-table>
+    }
+  </div>
+}

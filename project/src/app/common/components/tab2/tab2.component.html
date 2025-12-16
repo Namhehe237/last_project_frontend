@@ -1,0 +1,39 @@
+<div class="flex rounded-24 bg-color-9 w-fit">
+  <div class="w-full grid relative">
+    <!-- Vùng scroll của tab -->
+    <div class="overflow-x-auto w-full" #scrollContainer (scroll)="checkScroll()">
+      <fieldset class="rounded-24 h-48 p-5 m-0 flex border-none gap-x-4 flex-nowrap w-fit">
+        @for (item of tabList(); track item.value) {
+					@if (item.value !== '') {
+        		<label class="flex items-center font-so text-base px-16 py-1 rounded-full border-2 border-transparent whitespace-nowrap has-checked:bg-white has-checked:font-bold  focus-within:border-color-8  active:active:border-color-8">
+          		<input type="radio" [name]="name" class="absolute pointer-events-none mask-contain [clip-path:rect(0_0_0_0)]"
+          			[value]="item.value"
+          			[checked]="currentTab().value === item.value"
+          			(change)="onChange(item)"
+          		>
+        			<span>{{item.name}}</span>
+      			</label>
+					}
+					@if (item.value === '') {
+        		<div class="bg-[#8f8f8f] h-full w-[1px]">&nbsp;</div>
+					}
+        }
+      </fieldset>
+    </div>
+  </div>
+
+	@if (showArrows) {
+  	<div class="flex items-center mr-2">
+    	<button (click)="scrollLeft()"
+            	[disabled]="disableLeft"
+            	class="__btn-img w-28 h-28 rounded-full {{disableLeft ? 'hover:cursor-not-allowed' : 'bg-white'}}">
+      	<img class="_left" src="image/open-down-2.svg" alt="down">
+    	</button>
+    	<button (click)="scrollRight()"
+            	[disabled]="disableRight"
+            	class="__btn-img w-28 h-28 rounded-full {{disableRight ? 'hover:cursor-not-allowed' : 'bg-white'}}">
+      	<img class="_right" src="image/open-down-2.svg" alt="down">
+    	</button>
+  	</div>
+	}
+</div>

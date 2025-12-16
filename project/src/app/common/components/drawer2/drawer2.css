@@ -1,0 +1,44 @@
+:host {
+	--duration: 0.4s;
+}
+
+._dialog {
+	padding: 0;
+	margin-right: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	max-width: 100dvw;
+	max-height: none;
+	border-radius: 0;
+	height: 100dvh;
+	background-color: transparent;
+	border-style: none;
+	box-shadow: 0 0 #000000;
+
+	outline-style: none;
+	opacity: 0;
+	transform: translateX(100%);
+	transition: transform var(--duration) ease-out, display var(--duration) ease-out allow-discrete, overlay var(--duration) ease-out allow-discrete, opacity var(--duration) ease-out;
+
+	&:open {
+		transform: translateX(0);
+		opacity: 1;
+	}
+
+	&::backdrop {
+		transition: display var(--duration) allow-discrete, overlay var(--duration) allow-discrete,
+	}
+}
+
+
+._shadow-1 {
+	box-shadow: -8px 0px 10px 3px rgba(0, 0, 0, 0.06);
+}
+
+
+@starting-style {
+  ._dialog:open {
+		opacity: 0;
+    transform: translateX(100%);
+  }
+}

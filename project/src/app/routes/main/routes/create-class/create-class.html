@@ -1,0 +1,25 @@
+<div class="create-class-container">
+  <div class="p-16">
+    <div class="grid grid-cols-[1fr_auto] gap-x-10 mb-16">
+      <b class="text-24">Tạo lớp học</b>
+    </div>
+
+    <form class="mb-16" [formGroup]="form">
+      <div class="grid gap-y-26">
+        <div class="grid grid-cols-[auto_1fr] gap-x-16 items-center">
+          <span data-label>Tên lớp học</span>
+          <input type="text" required formControlName="className" class="__fc w-full">
+        </div>
+
+        <div class="__fg">
+          <span data-label>Mô tả</span>
+          <textarea formControlName="description" class="__fc w-full" rows="3"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <fieldset class="m-0 flex justify-end gap-x-6 border-t border-x-0 border-b-0 border-gray-dd p-16" [disabled]="status() === 1">
+    <button type="button" class="min-w-120 __btn-2" [disabled]="status() === 1" (click)="onReset()">Đặt lại</button>
+    <button type="button" class="min-w-120 __btn-1" [class]="{'__spinner-1': status() === 1}" [disabled]="isSubmitDisabled()" (click)="onSubmit()">Tạo</button>
+  </fieldset>
+</div>

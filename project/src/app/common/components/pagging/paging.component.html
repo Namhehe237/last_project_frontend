@@ -1,0 +1,40 @@
+@if (totalElements() > 0) {
+  <div class="flex {{showPageSize() ? 'justify-between' : 'justify-center'}} mt-16">
+    @if (showPageSize()) {
+      <div class="_pageSize">
+        Cỡ trang <select (change)="onChangePageSize($event)" class="h-28 __fc" [value]="pageSize()">
+        <option [value]="20">20</option>
+        <option [value]="50">50</option>
+      </select>
+      </div>
+    }
+    <div class="flex items-center space-x-1 my-4 select-none">
+      <!-- Previous button -->
+      <button
+        class="bg-inherit px-3 py-1 border-none text-sm cursor-pointer text-[#6496a8] {{page() === 1 ? 'hover:cursor-not-allowed' : 'hover:bg-[#eef7fa]'}}"
+        (click)="onPageChange(page() - 1)"
+      >
+        &lt;
+      </button>
+      <!-- Page Numbers -->
+			@for (item of pages; track item) {
+      	<button
+        	class="px-3 py-1 border-none text-sm text-center min-w-32 text-[#6496a8]
+          	{{item === '...' || page() === item ? '' : 'cursor-pointer'}}
+          	{{page() === item ? 'bg-[#eef7fa]' : ( item !== '...' ? 'bg-inherit hover:bg-[#eef7fa]' : 'bg-inherit')}}"
+        	(click)="item !== '...' && onPageChange(item)"
+      	>
+        	{{ item }}
+      	</button>
+			}
+
+      <!-- Next button -->
+      <button
+        class="bg-inherit px-3 py-1 border-none text-sm cursor-pointer text-[#6496a8] {{page() === totalPages ? 'hover:cursor-not-allowed' : 'hover:bg-[#eef7fa]'}}"
+        (click)="onPageChange(page() + 1)"
+      >
+        &gt;
+      </button>
+    </div>
+  </div>
+}

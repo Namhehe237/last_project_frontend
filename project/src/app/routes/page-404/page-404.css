@@ -1,0 +1,25 @@
+:host {
+	display: grid;
+	height: 100vh;
+	grid-template-rows: 68px 1fr;
+}
+
+main {
+  background: var(--color-bg-secondary);
+}
+
+header h1 {
+  color: var(--color-text-primary);
+}
+
+main b {
+  color: var(--color-text-primary);
+}
+
+main a {
+  color: var(--color-text-link);
+}
+
+main a:hover {
+  color: var(--color-text-link-hover);
+}

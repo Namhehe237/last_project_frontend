@@ -1,0 +1,75 @@
+<dialog closedby="none" #_exam_result_detail_dialog class="min-w-800 max-w-1200 max-h-[90vh] overflow-y-auto" (close)="onClose()">
+  <div class="p-24">
+    <div class="grid grid-cols-[1fr_auto] gap-x-10 mb-24">
+      <h2 class="text-24 font-bold">Chi tiết bài thi</h2>
+      <button type="button" class="self-start __btn-img" (click)="onClose()">
+        <img src="image/close-icon-black.svg" alt="close" class="w-[24px] h-[24px]"/>
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <div class="text-center py-32 text-gray-500">Đang tải...</div>
+    } @else if (result()) {
+      <div class="mb-24">
+        <h3 class="text-20 font-semibold mb-12">{{ result()!.examName }}</h3>
+        <div class="text-14 text-gray-600 mb-16">
+          <div class="mb-8">Môn học: {{ result()!.subjectName }}</div>
+          <div class="mb-8">Điểm: {{ formatScore(result()!.score) }}</div>
+          <div class="mb-8">Số câu đúng: {{ result()!.correctAnswers }}/{{ result()!.totalQuestions }}</div>
+          @if (result()!.submitTime) {
+            <div>Thời gian nộp: {{ formatDate(result()!.submitTime) }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-y-24">
+        @for (question of result()!.questions; track question.questionId; let i = $index) {
+          <div class="bg-white rounded-12 p-16 shadow border-2" 
+               [class.border-green-500]="question.isCorrect"
+               [class.border-red-500]="!question.isCorrect">
+            <div class="font-semibold mb-12 flex items-center gap-x-8">
+              <span>Q{{ i + 1 }}.</span>
+              <span>{{ question.questionText }}</span>
+              @if (question.isCorrect) {
+                <span class="ml-auto px-12 py-4 bg-green-100 text-green-700 rounded-4 text-12 font-semibold">
+                  ✓ Đúng
+                </span>
+              } @else {
+                <span class="ml-auto px-12 py-4 bg-red-100 text-red-700 rounded-4 text-12 font-semibold">
+                  ✗ Sai
+                </span>
+              }
+            </div>
+            <div class="flex flex-col gap-y-8">
+              @for (answer of question.answers; track answer.answerId) {
+                <label class="flex items-center gap-8 p-8 rounded-4"
+                       [class.bg-green-50]="answer.isCorrect"
+                       [class.bg-blue-50]="question.chosenAnswerId === answer.answerId && !answer.isCorrect"
+                       [class.bg-red-50]="question.chosenAnswerId === answer.answerId && !answer.isCorrect">
+                  <input type="radio"
+                         [checked]="question.chosenAnswerId === answer.answerId"
+                         disabled
+                         class="cursor-not-allowed" />
+                  <span [class.font-semibold]="answer.isCorrect || question.chosenAnswerId === answer.answerId">
+                    {{ answer.answerText }}
+                  </span>
+                  @if (answer.isCorrect) {
+                    <span class="ml-auto text-green-600 font-semibold text-12">(Đáp án đúng)</span>
+                  }
+                  @if (question.chosenAnswerId === answer.answerId && !answer.isCorrect) {
+                    <span class="ml-auto text-red-600 font-semibold text-12">(Bạn đã chọn)</span>
+                  }
+                </label>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <fieldset class="m-0 flex justify-end gap-x-6 border-t-1 border-x-0 border-b-0 border-gray-dd p-16">
+    <button type="button" class="min-w-120 __btn-1" (click)="onClose()">Đóng</button>
+  </fieldset>
+</dialog>
+

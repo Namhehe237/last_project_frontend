@@ -1,0 +1,79 @@
+<dialog id="_create_question" #_create_question class="rounded-16 min-w-756 p-24">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-16">
+    <div class="flex items-center justify-between gap-12 flex-wrap">
+      <h3 class="m-0" style="color: var(--color-text-primary); font-weight: var(--font-weight-bold);">Tạo Câu Hỏi</h3>
+      <div class="flex gap-8">
+        <button type="button" class="__btn-2" (click)="downloadTemplate()">Tải Mẫu Excel</button>
+        <input #excelInput type="file" accept=".xlsx,.xls" class="hidden" (change)="onExcelSelected($event)" />
+        <button type="button" class="__btn-2 w-" (click)="triggerUpload(excelInput)" [disabled]="uploadStatus() === 1">
+          {{ selectedExcelFileName ? (uploadStatus() === 1 ? 'Đang tải lên...' : 'Đổi File Excel') : 'Nhập từ Excel' }}
+        </button>
+      </div>
+    </div>
+    @if (selectedExcelFileName) {
+      <div class="text-12 text-gray-500 flex items-center gap-8">
+        File đã chọn: <strong>{{ selectedExcelFileName }}</strong>
+        <button type="button" class="__btn-2-sm text-blue-500 underline text-12" (click)="clearSelectedExcel(excelInput)">Xóa</button>
+      </div>
+    }
+
+    <label class="__fg">
+      <span data-label>Nội Dung Câu Hỏi</span>
+      <textarea class="__fc resize-none" rows="3" formControlName="questionText" [disabled]="selectedExcelFile() !== null"></textarea>
+    </label>
+
+    <div class="grid grid-cols-2 gap-16">
+      <label class="__fg">
+        <span data-label>Tên Môn Học</span>
+        <select class="__fc" formControlName="subjectName" [disabled]="selectedExcelFile() !== null">
+          <option value="" hidden>Chọn Môn Học</option>
+          <option value="Mathematics">Toán Học</option>
+          <option value="English">Tiếng Anh</option>
+          <option value="Physics">Vật Lý</option>
+          <option value="Chemistry">Hóa Học</option>
+          <option value="Biology">Sinh Học</option>
+          <option value="History">Lịch Sử</option>
+          <option value="Geography">Địa Lý</option>
+        </select>
+      </label>
+      <label class="__fg">
+        <span data-label>Mức Độ Khó</span>
+        <select class="__fc" formControlName="difficultyLevel" [disabled]="selectedExcelFile() !== null">
+          <option value="" hidden>Chọn Mức Độ Khó</option>
+          <option [value]="DifficultyLevel.EASY">Dễ</option>
+          <option [value]="DifficultyLevel.MEDIUM">Trung Bình</option>
+          <option [value]="DifficultyLevel.HARD">Khó</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="flex flex-col gap-10">
+      <span class="text-14" style="color: var(--color-text-secondary);">Nhập bốn đáp án. Đáp án đầu tiên là <strong>Đáp Án Đúng</strong>.</span>
+      <div class="grid grid-cols-2 gap-16">
+        <label class="__fg">
+          <span data-label class="font-bold">Đáp Án Đúng</span>
+          <input class="__fc" type="text" formControlName="answer1" [disabled]="selectedExcelFile() !== null" />
+        </label>
+        <label class="__fg">
+          <span data-label>Đáp Án 2</span>
+          <input class="__fc" type="text" formControlName="answer2" [disabled]="selectedExcelFile() !== null" />
+        </label>
+        <label class="__fg">
+          <span data-label>Đáp Án 3</span>
+          <input class="__fc" type="text" formControlName="answer3" [disabled]="selectedExcelFile() !== null" />
+        </label>
+        <label class="__fg">
+          <span data-label>Đáp Án 4</span>
+          <input class="__fc" type="text" formControlName="answer4" [disabled]="selectedExcelFile() !== null" />
+        </label>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-12 mt-8">
+      <button type="button" class="__btn-2" (click)="onOkCancel()">Hủy</button>
+      <button type="submit" class="__btn-1" [disabled]="status() === 1 || uploadStatus() === 1 || !canSubmit()">
+        @if (uploadStatus() === 1) { Đang nhập... } @else { Tạo }
+      </button>
+    </div>
+  </form>
+</dialog>

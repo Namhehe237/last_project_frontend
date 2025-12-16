@@ -1,0 +1,115 @@
+@if (isLoading) {
+  <div class="absolute inset-0 bg-white/70 flex items-center justify-center z-20">
+    <div class="flex items-center space-x-2 text-gray-700">
+      <div class="w-30 h-30 __spinner-1"></div>
+    </div>
+  </div>
+}
+
+<div class="text-24 font-bold mb-16 mt-4">
+	Quản lý tài khoản
+</div>
+
+<div class="container mx-auto max-w-2xl px-4">
+  <div class="account-card">
+    
+    <div class="card-body">
+      <div class="avatar-section">
+        <div class="avatar-label mb-8">
+          <span class="form-label">Ảnh đại diện</span>
+          <span class="text-gray-500 text-14">(Chỉ tải lên .jpeg, .jpg, .png không vượt quá 2 MB)</span>
+        </div>
+        
+        <div class="flex items-center justify-center mb-8">
+          <app-image-uploader
+            [images]="avatarImages"
+            [acceptedTypes]="['image/jpeg', 'image/jpg', 'image/png']"
+            [maxImages]="1"
+            [maxFileSize]="2097152"
+            (imagesChanged)="onImagesChanged($event)"
+            (imageRemoved)="onImageRemoved($event)"
+          />
+        </div>
+      </div>
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group md:col-span-2">
+            <label class="form-label" for="fullName">Họ và tên</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              formControlName="fullName"
+              class="form-input"
+              [class.error]="isFieldInvalid('fullName')"
+              placeholder="Nhập họ và tên"
+            />
+            @if (isFieldInvalid('fullName')) {
+              <div class="error-message">{{ getFieldError('fullName') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phoneNumber">Số điện thoại</label>
+            <input 
+              type="tel" 
+              id="phoneNumber" 
+              formControlName="phoneNumber"
+              class="form-input"
+              [class.error]="isFieldInvalid('phoneNumber')"
+              placeholder="Nhập số điện thoại"
+            />
+            @if (isFieldInvalid('phoneNumber')) {
+              <div class="error-message">{{ getFieldError('phoneNumber') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              class="form-input"
+              [class.error]="isFieldInvalid('email')"
+              placeholder="Địa chỉ email"
+              readonly
+            />
+            @if (isFieldInvalid('email')) {
+              <div class="error-message">{{ getFieldError('email') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="roleName">Vai trò</label>
+            <input 
+              type="text" 
+              id="roleName" 
+              [value]="userInfo.roleName"
+              class="form-input bg-gray-50" 
+              placeholder="Vai trò người dùng" 
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-6 border-t border-gray-200 mt-20">
+          <button
+            type="submit"
+            class="btn-primary px-8 mt-12 mr-24"
+            [disabled]="isSubmitDisabled"
+          >
+            @if (isLoading) {
+              <span class="flex items-center">
+                <span class="spinner mr-2"></span>
+                Đang cập nhật...
+              </span>
+            } @else {
+              Cập nhật
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

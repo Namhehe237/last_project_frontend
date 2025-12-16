@@ -1,0 +1,76 @@
+.create-class-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Form field styling */
+.__fg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.__fg span[data-label] {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.__fc {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-6);
+  font-size: 14px;
+  transition: border-color var(--transition-base);
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.__fc:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.__fc:invalid {
+  border-color: var(--color-error-500);
+}
+
+textarea.__fc {
+  resize: none;
+}
+
+/* Spinner styling */
+.__spinner-1 {
+  position: relative;
+  color: transparent;
+}
+
+.__spinner-1::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  color: var(--color-white);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fieldset styling */
+fieldset[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}

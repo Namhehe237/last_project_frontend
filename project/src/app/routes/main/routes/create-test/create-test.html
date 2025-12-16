@@ -1,0 +1,98 @@
+<div class="flex flex-col gap-16">
+  <div class="bg-white p-16 rounded-16 shadow-sm">
+    <form [formGroup]="filtersForm" class="grid grid-cols-3 gap-16 items-end">
+      <label class="__fg">
+        <span data-label>Mức độ khó</span>
+        <select class="__fc" formControlName="difficultyLevel">
+          <option value="" hidden>Chọn mức độ khó</option>
+          <option value="EASY">Dễ</option>
+          <option value="MEDIUM">Trung bình</option>
+          <option value="HARD">Khó</option>
+        </select>
+      </label>
+
+      <label class="__fg">
+        <span data-label>Tên môn học</span>
+        <select class="__fc" formControlName="subjectName">
+          <option value="" hidden>Chọn môn học</option>
+          <option value="Mathematics">Toán học</option>
+          <option value="English">Tiếng Anh</option>
+          <option value="Physics">Vật lý</option>
+          <option value="Chemistry">Hóa học</option>
+          <option value="Biology">Sinh học</option>
+          <option value="History">Lịch sử</option>
+          <option value="Geography">Địa lý</option>
+        </select>
+      </label>
+
+      <div class="flex justify-end gap-12">
+        <button type="button" class="__btn-img flex items-center w-44" (click)="resetFilters()" title="Reset bộ lọc">
+          <img src="/image/reset.svg" alt="Reset" class="w-16 h-16" />
+        </button>
+        <button type="button" class="__btn-2" (click)="search(true)">Tìm kiếm</button>
+        <button type="button" class="__btn-2" (click)="openCreateQuestionDialog()">Tạo câu hỏi</button>
+      </div>
+    </form>
+  </div>
+
+  <app-table #dataTable
+    [columns]="columns"
+    [dataSource]="questions"
+    [showPaging]="true"
+    [isLoading]="isLoading"
+    [totalElements]="totalElements"
+    [type]="'question-table'"
+    (reloadData)="reloadData()"
+    (actionClicked)="onActionClick($event)">
+  </app-table>
+
+    <div class="flex justify-end items-center gap-12">
+      <span class="text-sm text-gray-600">{{ selectedQuestionIds.length }} câu đã chọn</span>
+      <button type="button"
+        class="__btn-2"
+        (click)="deleteSelectedQuestions()"
+        [disabled]="selectedQuestionIds.length === 0 || isLoading"
+      >
+        Xóa đã chọn
+      </button>
+      @if (!isAdmin) {
+        <button type="button"
+          class="__btn-2"
+          (click)="openCreateExamDrawer()"
+          [disabled]="isLoading"
+          >
+          Tạo bài thi
+        </button>
+      }
+    </div>
+  
+
+@if (isUpdateDrawerOpen) {
+  <app-update-question-drawer
+    [isOpen]="isUpdateDrawerOpen"
+    [questionData]="selectedQuestionForUpdate"
+    (updateQuestionResult)="onUpdateQuestionResult($event)"
+    (closeDrawer)="onCloseUpdateDrawer()"
+  ></app-update-question-drawer>
+}
+
+@if (isCreateExamDrawerOpen) {
+  <app-add-exam-detail-drawer
+    [isOpen]="isCreateExamDrawerOpen"
+    [selectedQuestionIds]="selectedQuestionIds"
+    (created)="reloadData()"
+    (closeDrawer)="onCloseCreateExamDrawer()"
+    (randomExamReady)="onRandomExamReady($event)"
+  ></app-add-exam-detail-drawer>
+}
+
+@if (isRandomEditDrawerOpen) {
+  <app-edit-random-exam-drawer
+    [isOpen]="isRandomEditDrawerOpen"
+    [examData]="randomExamData"
+    [isSaving]="isSavingRandomExam"
+    (closeDrawer)="onCloseRandomEditDrawer()"
+    (saveQuestions)="onSaveRandomExamQuestions($event)"
+  ></app-edit-random-exam-drawer>
+}
+</div>

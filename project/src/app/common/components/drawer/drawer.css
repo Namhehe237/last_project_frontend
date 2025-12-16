@@ -1,0 +1,167 @@
+/* Drawer Component Styles */
+:host {
+  display: block;
+}
+
+/* Backdrop styles */
+._backdrop {
+  backdrop-filter: blur(4px);
+}
+
+/* Drawer container */
+._drawer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  
+  /* Ensure smooth animations */
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+/* Header styles */
+._drawer-header {
+  flex-shrink: 0;
+  background-color: var(--color-bg-tertiary);
+}
+
+._drawer-header ._drawer-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  line-height: 1.5;
+}
+
+._drawer-header ._drawer-close-btn {
+  position: absolute;
+  left: -16px;
+}
+
+/* Content area */
+._drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--color-bg-tertiary);
+  max-height: calc(100vh - 80px);
+}
+
+/* Custom scrollbar for webkit browsers */
+._drawer-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+._drawer-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+._drawer-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+._drawer-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Animation classes */
+._drawer-enter {
+  transform: translateX(100%);
+}
+
+._drawer-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+._drawer-exit {
+  transform: translateX(0);
+}
+
+._drawer-exit-active {
+  transform: translateX(100%);
+  transition: transform 300ms ease-in-out;
+}
+
+/* Left position variants */
+._drawer-left._drawer-enter {
+  transform: translateX(-100%);
+}
+
+._drawer-left._drawer-exit-active {
+  transform: translateX(-100%);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ._drawer {
+    width: 100vw !important;
+  }
+  
+  ._drawer-content {
+    padding: 1rem;
+  }
+  
+  ._drawer-header {
+    padding: 1rem 1rem;
+  }
+  
+  ._drawer-header ._drawer-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  ._drawer-content {
+    padding: 0.75rem;
+  }
+  
+  ._drawer-header {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Focus management */
+._drawer:focus {
+  outline: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  ._drawer,
+  ._backdrop {
+    transition: none !important;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  ._drawer {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+  
+  ._drawer-header {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
+  }
+  
+  ._drawer-header ._drawer-title {
+    color: #f9fafb;
+  }
+  
+  ._drawer-header ._drawer-close-btn {
+    color: #9ca3af;
+  }
+  
+  ._drawer-header ._drawer-close-btn:hover {
+    color: #d1d5db;
+    background-color: #374151;
+  }
+  
+  ._drawer-content {
+    background-color: #1f2937;
+  }
+} 

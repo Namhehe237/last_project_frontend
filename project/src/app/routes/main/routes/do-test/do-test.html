@@ -1,0 +1,64 @@
+@if (isLoading) {
+  <div class="w-full flex justify-center py-32">Loading...</div>
+} @else if (exam) {
+  <div class="flex items-center justify-between mb-16">
+    <div class="text-24 font-bold">{{ exam.examName }}</div>
+    <div class="flex items-center gap-16">
+      <div class="text-18">Time left: <span class="font-bold">{{ fmtTime(remainingSeconds) }}</span></div>
+    </div>
+  </div>
+
+      @if (showCameraPreview && videoElement) {
+    <div #cameraWrapper 
+         class="fixed z-50 cursor-move"
+         [style.left.px]="cameraPosition.x"
+         [style.top.px]="cameraPosition.y"
+         (mousedown)="onDragStart($event)"
+         style="user-select: none;">
+        <div class="relative">
+        <div #videoContainer class="w-320 h-240 rounded-8 border-2 border-gray-300 overflow-hidden bg-black shadow-lg"></div>
+          <div class="absolute top-4 right-4 bg-red-500 text-white text-12 px-8 py-4 rounded-4">
+            Monitoring
+          </div>
+        </div>
+    </div>
+  }
+
+  @if (violationDetected) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-16 py-12 rounded-8 mb-16">
+      <p class="font-bold">Violation Detected!</p>
+      <p>Your exam will be automatically submitted with 0 points.</p>
+    </div>
+  }
+
+  <div class="flex flex-col gap-y-24">
+    @for (q of questions; track q.questionId) {
+      <div class="bg-white rounded-12 p-16 shadow">
+        <div class="font-semibold mb-12">Q{{ $index + 1 }}. {{ q.questionText }}</div>
+        <div class="flex flex-col gap-y-8">
+          @for (a of q.answers || []; track a.answerId) {
+            <label class="flex items-center gap-8">
+              <input type="radio"
+                     name="q-{{ q.questionId }}"
+                     [value]="a.answerId"
+                     [disabled]="violationDetected || isSubmitting"
+                     (change)="onSelect(q.questionId!, a.answerId!)" />
+              <span>{{ a.answerText }}</span>
+            </label>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="mt-24">
+    <button type="button" 
+            class="__btn-2" 
+            [disabled]="isSubmitting || violationDetected" 
+            (click)="onSubmit()">
+      Submit
+    </button>
+  </div>
+} @else {
+  <div>No exam found</div>
+}

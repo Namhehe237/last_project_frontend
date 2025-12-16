@@ -1,0 +1,223 @@
+<div class="bg-white p-24 rounded-b-16 relative overflow-x-auto _table-wrapper w-full {{classMore()}}"
+     #tableWrapper>
+  @if (dataSource().length > 0) {
+    <table class="w-full __tb-2" appAutoBlockTable #dataTable (scroll)="onTableScroll($event)" style="display: block;">
+      <thead>
+      <tr>
+				@for (column of columns(); track column.field) {
+					@if (column.isCheckbox) {
+					<th class="_th text-center"
+							[class._stickyFirst]="column.isStickyFirst"
+            	[class._stickyEnd]="column.isStickyEnd"
+            	[style.width.px]="column.isStickyFirst || column.isStickyEnd ? column.width : null">
+						<div class="flex items-center ml-4">
+							<input
+								type="checkbox"
+								[checked]="isSelectAll()"
+								(click)="toggleSelectAll()"
+								name="radio-group"
+								class="w-18 h-14 text-blue-600 bg-white border-gray-300 rounded-full focus:ring-blue-500"
+								[id]="'select-all-checkbox-'" />
+							<label
+								[for]="'select-all-checkbox-'"
+								class="cursor-pointer flex-1 text-center"
+							>{{column.title}}
+							</label>
+						</div>
+					</th>
+					} @else {
+        	<th class="_th"
+            	[class._stickyFirst]="column.isStickyFirst"
+            	[class._stickyEnd]="column.isStickyEnd"
+            	[style.width.px]="column.isStickyFirst || column.isStickyEnd ? column.width : null"
+        	>{{column.title}}</th>
+					}
+				}
+      </tr>
+      </thead>
+      <tbody>
+			@for (data of dataSource(); track trackByRowId($index, data); let i = $index) {
+      <tr class="{{data.isShowStatus ? 'border-b-0' : ''}}">
+				@for (column of columns(); track column) {
+        <td [class._stickyFirst]="column.isStickyFirst"
+            [class._stickyEnd]="column.isStickyEnd"
+            [style.width.px]="column.isStickyFirst || column.isStickyEnd ? column.width : null"
+						[class]="{'text-center': column.isAction || type() === 'replacement',
+      									'px-8': column.isAction || type() === 'replacement'}"
+      									class="_td" >
+					@if (column.isShowStatusStream) {
+						<div class="flex justify-between items-center">
+							<span>{{data.status}}</span>
+							<button class="__btn-img w-32 h-32 border rounded-full border-solid border-[#eaeaea] hover:border-[#6496a8]"
+											(click)="data.isShowStatus = !data.isShowStatus">
+								<img class="_img {{data.isShowStatus ? '_rotate-180' : '_rotate-0'}}"
+										 src="image/open-down-2.svg" alt="down">
+							</button>
+						</div>
+					} @else if (column.isList) {
+  					<div class="max-h-100 min-w-160 overflow-y-auto pr-4">
+    					@if (hasList(data, column.field)) {
+      					@if (getList(data, column.field).length > 0) {
+        					<div>
+          					<span>{{ getList(data, column.field)[0] }}</span>
+
+          					@if (getList(data, column.field).length > 1) {
+            				<div>	
+            					<span class="cursor-pointer text-[#248be3] underline"
+														tabindex="0"
+        										role="button"
+        										(click)="onActionClick('view-list', data, column.field)"
+											>+{{ getList(data, column.field).length - 1 }} more</span>
+            				</div>
+          					}
+        					</div>
+      					}
+    					} @else {
+      					<span>{{ column.showDashWhenEmpty ? '-' : '' }}</span>
+    					}
+  					</div>
+					} @else if (column.isViewImage) {
+      			<span
+        			class="_view-image flex items-center gap-4"
+        			(click)="onActionClick('view-image', data)"
+        			(keydown.enter)="onActionClick('view-image', data)"
+        			tabindex="0"
+        			role="button"
+      			>
+        			<img class="w-20 h-20" src="image/view-image.svg" alt="view image" />
+        			View
+      			</span>
+  				} @else if (column.isCheckbox && !column.isHref) {
+      			<div class="flex items-center gap-12">
+							<input
+								type="checkbox"
+								[checked]="data['isSelected']"
+								(click)="onRowCheckboxChange(data)"
+								name="radio-group"
+								class="w-18 h-14 text-blue-600 bg-white border-gray-300 rounded-full focus:ring-blue-500"
+								[id]="'checkbox-' + getRowId(data)" />
+							<span [style.color]="getColor(data, column, column.field)"
+							>{{getDisplayValue(data, column)}}</span>
+						</div>
+  				} @else if (column.isHref && column.isCheckbox) {
+      			<div class="flex items-center gap-12">
+							<input
+								type="checkbox"
+								[checked]="data['isSelected']"
+								(click)="onRowCheckboxChange(data)"
+								name="radio-group"
+								class="w-18 h-14 text-blue-600 bg-white border-gray-300 rounded-full focus:ring-blue-500"
+								[id]="'checkbox-href-' + getRowId(data)" />
+							<a
+								class="w-auto underline text-[#248be3] hover:cursor-pointer" href="#"
+								(click)="callHref($event, data, column.field)"
+							>{{getDisplayValue(data, column)}}
+							</a>
+						</div>
+  				} @else if (column.isGrid) {
+  					<div class="flex flex-col gap-y-6">
+      				@for (detailField of column.gridConfig?.fields || []; track detailField.key) {
+        				@let fieldValue = getValue(data, detailField.key);
+        				@if (fieldValue || detailField.displayWhenEmpty) {
+          				<div class="flex items-start gap-x-8">
+            				<span class="text-[#757575] min-w-60">
+              				{{detailField.label}}:
+            				</span>
+            				<span class="wrap-anywhere">
+              				{{fieldValue || detailField.emptyText || '-'}}
+            				</span>
+          				</div>
+        				}
+      				}
+    				</div>
+					} @else if (!column.isAction) {
+  					@if (column.isHref) {
+    					<a class="underline text-[#248be3] hover:cursor-pointer" href="#"
+       					(click)="callHref($event, data, column.field)"
+       					[style.color]="getColor(data, column, column.field)"
+    					>{{getDisplayValue(data, column)}}</a>
+  					} @else {
+    					<span [style.color]="getColor(data, column, column.field)"
+    					>{{getDisplayValue(data, column)}}</span>
+  					}
+					} @else {
+						@if (type() === 'user-table') {
+							<button type="button" class="__btn-2-sm w-102 h-32" (click)="onActionClick('delete-user', data)">Xóa</button>
+						} @if (type() === 'class-table') {
+							<button type="button" class="__btn-2-sm mr-16 w-102 h-32" (click)="onActionClick('update-class', data)">Chỉnh sửa</button>
+							<button type="button" class="__btn-2-sm w-102 h-32" (click)="onActionClick('delete-class', data)">Xóa</button>
+						} @if (type() === 'question-table') {
+							<div class="flex">
+								<button type="button" class="__btn-2-sm mr-16 w-102 h-32" (click)="onActionClick('update-question', data)">Chỉnh sửa</button>
+								<button type="button" class="__btn-2-sm w-102 h-32" (click)="onActionClick('delete-question', data)">Xóa</button>
+							</div>
+						} @if (type() === 'exam-table') {
+							<button type="button" class="__btn-2 w-128" (click)="onActionClick('do-test', data)">Làm bài</button>
+						} @if (type() === 'teacher-exam-table') {
+							<button type="button" class="__btn-2 w-128" (click)="onActionClick('view-students', data)">Xem học sinh</button>
+						} @if (type() === 'exam-students-table') {
+							@if (column.field === 'video') {
+								@if (getValue(data, 'videoUrl')) {
+									<button type="button" class="__btn-2 text-14" (click)="onActionClick('view-video', data, 'video')">Xem video</button>
+								} @else {
+									<span class="text-gray-400 text-14">-</span>
+								}
+							} @else if (column.field === 'action') {
+								@if (getValue(data, 'hasViolations')) {
+									<button type="button" class="px-16 py-8 bg-blue-500 text-white rounded-4 hover:bg-blue-600 text-14" (click)="onActionClick('view-log', data)">Xem log</button>
+								} @else {
+									<span class="text-gray-400 text-14">-</span>
+								}
+							}
+						} @if (type() === 'pending-return-requests') {
+              				<button type="button" class="__btn-2 mr-16 w-128" (click)="onActionClick('view-details', data)">Xem chi tiết</button>
+              				<button type="button" class="__btn-2 w-128" (click)="onActionClick('update-request', data)">Chỉnh sửa</button>
+						} @if (type() === 'approved-return-requests') {
+              				<button type="button" class="__btn-2 w-128" (click)="onActionClick('view-details', data)">Xem chi tiết</button>
+						} @if (type() === 'request-table') {
+							<div class="flex">
+							<button type="button" class="__btn-2-sm w-100 h-32 mr-16 bg-green-600 hover:bg-green-700" (click)="onActionClick('approve-request', data)">Phê duyệt</button>
+							<button type="button" class="__btn-2-sm w-100 h-32 bg-red-600 hover:bg-red-700" (click)="onActionClick('reject-request', data)">Từ chối</button>
+							</div>
+						}
+					}
+        </td>
+				}
+      </tr>
+
+      <!-- Status Stream Row - Located in table but has fixed width -->
+      @if (data.isShowStatus) {
+        <tr class="_status-stream-row">
+          <td class="_td _status-stream-cell" [colSpan]="columns().length">
+            <div class="_status-stream-wrapper" [style.width.px]="getTableWidth()">
+              <app-status-stream [statuses]="data.statusStream || []"></app-status-stream>
+            </div>
+          </td>
+        </tr>
+      }
+			}
+      </tbody>
+    </table>
+    @if (showPaging()) {
+  		<app-paging [page]="page" [pageSize]="pageSize" [totalElements]="totalElements()"
+              		[showPageSize]="true"
+              		(pageChange)="changePage($event)"
+              		(pageSizeChange)="changePageSize($event)"></app-paging>
+		}
+	}
+  @if (dataSource().length === 0) {
+    <div class="w-full flex justify-center">
+      <span>No data was retrieved</span>
+    </div>
+  }
+	@if (isLoading()) {
+  	<div class="absolute inset-0 bg-white/70 flex items-center justify-center z-20">
+    	<div class="flex items-center space-x-2 text-gray-700">
+      	<div class="w-30 h-30 __spinner-1"></div>
+    	</div>
+  	</div>
+	}
+</div>
+
+<ng-content></ng-content>
+

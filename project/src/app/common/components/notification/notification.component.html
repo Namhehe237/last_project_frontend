@@ -1,0 +1,14 @@
+@if (show) {
+<div class="_notification" [class]="type">
+  @if (type === 'success') {
+		<span class="_icon">&#10003;</span> <!-- Tick -->
+	}
+	@if (type === 'error') {
+  	<span class="_icon">&#9888;</span>   <!-- Warning/Error -->
+	}
+	@if (type === 'info') {
+  	<span class="_icon">&#8505;</span>    <!-- Info -->
+	}
+  <span class="_message">{{ message }}</span>
+</div>
+}

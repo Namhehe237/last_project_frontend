@@ -1,0 +1,12 @@
+<fieldset class="_tab flex items-stretch border-none p-0 m-0">
+	@for (item of tabList(); track item.value) {
+		<label class="px-20 pb-14 pt-14 m-w-20 cursor-pointer">
+			<input type="radio" name="{{name}}" class="absolute pointer-events-none mask-contain [clip-path:rect(0_0_0_0)]"
+			[value]="item.value"
+			[checked]="currentTab().value === item.value"
+			(change)="onChange(item)"
+			>
+			<span class="text-18">{{item.name}}</span>
+		</label>
+	}
+</fieldset>

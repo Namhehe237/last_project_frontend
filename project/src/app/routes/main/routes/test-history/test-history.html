@@ -1,0 +1,25 @@
+<div class="text-24 font-bold mb-16 mt-4">
+  Lịch sử bài thi
+</div>
+
+  <div class="__card-header rounded-t-16 bg-color-3 items-center px-24 py-12 text-16 flex justify-between h-fit">
+    <span class="title font-bold">Lịch sử bài thi</span>
+  </div>
+  
+    <app-table [columns]="columns"
+                [dataSource]="testHistory"
+                [showPaging]="false"
+                [totalElements]="totalElements"
+                [isLoading]="isLoading"
+                (reloadData)="reloadData()"
+                [type]="'test-history-table'"
+                #dataTable>
+    </app-table>
+
+@if (selectedExamId() !== null) {
+  <app-exam-result-detail-dialog
+    #resultDetailDialog
+    [examId]="selectedExamId()!"
+    (closed)="selectedExamId.set(null)">
+  </app-exam-result-detail-dialog>
+}

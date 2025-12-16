@@ -1,0 +1,65 @@
+._timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  position: relative;
+  width: 100%;
+}
+
+._step {
+  position: relative;
+  text-align: center;
+}
+
+/* Dashed line between circles */
+._step:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: -50%;
+  width: 100%;
+  height: 0;
+  border-top: 2px dashed #ccc;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+._circle {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  margin: 0 auto;
+  z-index: 1;
+  background-color: #fff;
+}
+
+._circle::after {
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+._label {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+._time {
+  font-size: 12px;
+  color: #757575;
+  margin-top: 8px;
+}
+
+._step ._label,
+._step ._time {
+  display: block;
+}
+
+._step ._info {
+  margin-top: 8px;
+  min-height: 40px; /* ensure fixed height */
+} 

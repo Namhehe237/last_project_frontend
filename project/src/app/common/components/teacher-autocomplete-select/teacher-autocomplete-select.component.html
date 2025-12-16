@@ -1,0 +1,67 @@
+<div class="relative w-full">
+  <div class="relative">
+    <input
+      #searchInput
+      type="text"
+      [value]="searchTerm()"
+      [disabled]="disabled()"
+      (input)="onInput($event)"
+      (focus)="onFocus()"
+      class="w-full __fc disabled:cursor-not-allowed! disabled:text-gray-aa disabled:bg-gray-99 disabled:opacity-30"
+    />
+    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+      <svg
+        class="w-4 h-4 text-gray-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+
+  @if (showDropdown()) {
+    <div
+      class="absolute z-10 w-full mt-1 bg-white border border-gray-dd max-h-200 overflow-y-auto rounded-6 px-2 pt-2"
+      #dropdown
+    >
+      <div class="flex flex-col space-y-4">
+        @for (option of options(); track option.teacherId) {
+          <button
+            (click)="selectOption(option)"
+            class="border-none text-14 px-4 py-2 cursor-pointer hover:bg-[#eef7fa] {{option?.teacherId === selectedItem()?.teacherId ? 'bg-[#eef7fa]' : 'bg-white'}}"
+          >
+            {{ option.fullName }}
+          </button>
+        }
+      </div>
+      @if (options().length === 0 && !loading()) {
+        <div class="w-full flex justify-center h-200 items-center">
+          <span>No teachers found</span>
+        </div>
+      }
+
+      <div class="sticky bottom-0 bg-white">
+        <app-paging 
+          [page]="page() + 1" 
+          [pageSize]="pageSize()" 
+          [totalElements]="totalElements()"
+          [showPageSize]="false"
+          (pageChange)="changePage($event)"
+          (pageSizeChange)="changePageSize($event)">
+        </app-paging>
+      </div>
+      @if (loading()) {
+        <div
+          class="absolute inset-0 bg-white/70 flex items-center justify-center z-20"
+        >
+          <div class="flex items-center space-x-2 text-gray-700">
+            <div class="w-30 h-30 __spinner-1"></div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+

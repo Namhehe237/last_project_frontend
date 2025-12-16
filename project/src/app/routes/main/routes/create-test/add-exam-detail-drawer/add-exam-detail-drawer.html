@@ -1,0 +1,145 @@
+<app-drawer
+  [isOpen]="isOpen()"
+  [title]="'Cung cấp thêm thông tin bài thi'"
+  [moreClass]="'w-4/5'"
+  (closeDrawer)="onClose()"
+>
+<div class="bg-white p-16 rounded-16 shadow-sm mt-12">
+  <form [formGroup]="form" class="flex flex-col gap-16">
+    <div class="flex gap-12">
+      <div class="relative inline-block group">
+        <button
+          type="button"
+          class="__btn-2"
+          [class.__btn-1]="creationMode === 'manual'"
+          [disabled]="!hasSelectedQuestions"
+          (click)="setCreationMode('manual')"
+          >
+          Dùng câu hỏi đã chọn
+        </button>
+        @if (!hasSelectedQuestions) {
+        <div role="tooltip" class="w-200 absolute z-10 left-1/2 -translate-x-1/2 mt-4 p-6 bg-[#fff] rounded-8 shadow-[2px_2px_24px_0_rgba(219,229,234,0.6)] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200">
+				  <div class="relative z-10 space-y-8 text-center">
+					  <span class="text-14 text-color-invaild font-bold">Chưa chọn câu hỏi.</span>
+				  </div>
+				  <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-[#fff]"></div>
+			  </div>
+        }
+      </div>
+      <button
+        type="button"
+        class="__btn-2"
+        [class.__btn-1]="creationMode === 'random'"
+        (click)="setCreationMode('random')"
+      >
+        Câu hỏi ngẫu nhiên
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-16">
+      <label class="__fg">
+        <span data-label>Tên bài thi</span>
+        <input class="__fc" type="text" formControlName="examName" />
+      </label>
+      <label class="__fg">
+        <span data-label>Tên môn học</span>
+        <select class="__fc" formControlName="subjectName">
+          <option value="" hidden>Chọn môn học</option>
+          <option value="Mathematics">Toán học</option>
+          <option value="English">Tiếng Anh</option>
+          <option value="Physics">Vật lý</option>
+          <option value="Chemistry">Hóa học</option>
+          <option value="Biology">Sinh học</option>
+          <option value="History">Lịch sử</option>
+          <option value="Geography">Địa lý</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid grid-cols-2 gap-16">
+      <label class="__fg">
+        <span data-label>Thời gian (phút)</span>
+        <input class="__fc" type="number" formControlName="durationMinutes" />
+      </label>
+
+      <div>
+        <label class="__fg">
+          <span data-label>Tên lớp</span>
+          <select class="__fc" formControlName="className">
+            @if (!isClassOptionsLoading && !classOptions.length) {
+              <option value="" hidden disabled>Không có lớp nào để chọn</option>
+            } @else {
+              <option value="" hidden>Chọn lớp</option>
+            }
+            @for (option of classOptions; track option.classId) {
+              <option [value]="option.className">{{ option.className }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-16">
+      <label class="__fg">
+        <span data-label>Thời gian mở</span>
+        <input class="__fc" type="datetime-local" formControlName="startTime" />
+      </label>
+      <label class="__fg">
+        <span data-label>Thời gian đóng</span>
+        <input class="__fc" type="datetime-local" formControlName="endTime" />
+      </label>
+    </div>
+    @if (form.get('endTime')?.hasError('endTimeBeforeStart')) {
+      <div class="text-14 text-error-500">
+        Thời gian kết thúc phải lớn hơn thời gian bắt đầu.
+      </div>
+    }
+
+    @if (creationMode === 'random') {
+      <div class="grid grid-cols-2 gap-16">
+        <label class="__fg">
+          <span data-label>Tổng số câu hỏi</span>
+          <input class="__fc" type="number" formControlName="totalQuestions" />
+        </label>
+        <div></div>
+        <label class="__fg">
+          <span data-label>Số câu hỏi dễ</span>
+          <input class="__fc" type="number" formControlName="easyQuestionCount" />
+        </label>
+        <label class="__fg">
+          <span data-label>Số câu hỏi trung bình</span>
+          <input class="__fc" type="number" formControlName="mediumQuestionCount" />
+        </label>
+        <label class="__fg">
+          <span data-label>Số câu hỏi khó</span>
+          <input class="__fc" type="number" formControlName="hardQuestionCount" />
+        </label>
+      </div>
+      @if (randomValidationMessage) {
+        <div class="text-14 text-error-500">
+          {{ randomValidationMessage }}
+        </div>
+      }
+    }
+
+    <div class="text-14" style="color: var(--color-text-secondary);">
+      Số câu hỏi đã chọn: {{ selectedQuestionIds().length || 0 }}
+      @if (creationMode === 'random') {
+        <span>(không bắt buộc ở chế độ ngẫu nhiên)</span>
+      }
+    </div>
+
+    <div class="flex justify-end gap-12 mt-8">
+      <button type="button" class="__btn-2" (click)="onClose()">Hủy</button>
+      <button
+        type="button"
+        class="__btn-1"
+        [disabled]="isCreateDisabled()"
+        (click)="onCreate()"
+      >
+        Tạo
+      </button>
+    </div>
+  </form>
+</div>
+</app-drawer>

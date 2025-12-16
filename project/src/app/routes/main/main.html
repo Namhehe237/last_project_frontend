@@ -1,0 +1,37 @@
+<header class="flex px-32 py-6 items-center justify-between ">
+	<h1 class="text-24 font-bold">SMART EXAM</h1>
+	<div class="gap-x-16 flex items-center">
+		<app-notification-bell></app-notification-bell>
+		<div class="cont">
+			<button id="menu-toggle" popovertarget="menu-items" class="__btn-img">
+				<svg class="icon" focusable="false" aria-hidden="true" width="24" height="24" viewBox="0 0 96 96">
+					<path d="M48,51.5c16.521,0,30.5,13.82,30.5,29.555h0V89A3.5,3.5,0,0,1,75,92.5H21A3.5,3.5,0,0,1,17.5,89h0V81.055C17.5,65.32,31.479,51.5,48,51.5Zm0,5c-13.772,0-25.5,11.595-25.5,24.555h0V87.5h51V81.055c0-12.831-11.494-24.323-25.087-24.552h0Zm0-53A20.5,20.5,0,1,1,27.5,24,20.5,20.5,0,0,1,48,3.5Zm0,5A15.5,15.5,0,1,0,63.5,24,15.5,15.5,0,0,0,48,8.5Z" transform="translate(-0.5 0.5)"></path>
+				</svg>
+			</button>
+			<div id="menu-items" popover anchor="menu-toggle" class="top-[anchor(bottom)] left-[calc(anchor(left)-375px)] m-0 w-420 p-16">
+				<div class="grid grid-cols-[1fr_auto] gap-16 items-center">
+					<button type="button" class="__btn-1-sm" (click)="onSignOut()">Đăng xuất</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="bg-gray-f7 p-12 grid grid-cols-[224px_1fr] gap-x-12">
+	<nav class="flex flex-col gap-y-4 bg-white rounded-16 p-6">
+		<app-menu-item-2 label="Quản lý" detailName="manage" [menuList]="menu_manage" />
+		<app-menu-item-2 label="Lớp học" detailName="class" [menuList]="menu_class" />
+        <app-menu-item-2 label="Bài thi" detailName="test" [menuList]="menu_test" />
+
+		@for (item of menu_1; track item.label) {
+			@if (item.isShow) {
+				<app-menu-item-1 label="{{item.label}}" link="{{item.link}}" />
+			}
+		}
+
+	</nav>
+	<main class="main">
+		<router-outlet/>
+	</main>
+</div>
+
+

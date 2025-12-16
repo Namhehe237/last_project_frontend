@@ -1,0 +1,19 @@
+<div class="text-24 font-bold mb-16 mt-4">
+  Quản lý bài thi
+</div>
+
+<div class="__card-header rounded-t-16 bg-color-3 items-center px-24 py-12 text-16 flex justify-between h-fit">
+  <span class="title font-bold">Danh sách bài kiểm tra</span>
+</div>
+<div class="border-[#fff] rounded-16 bg-white">
+  <app-table [columns]="columns"
+            [dataSource]="exams"
+            [showPaging]="false"
+            [totalElements]="totalElements"
+            [isLoading]="isLoading"
+            (reloadData)="reloadData()"
+            [type]="'teacher-exam-table'"
+            (actionClicked)="onActionClick($event)"
+            #dataTable>
+  </app-table>
+</div>

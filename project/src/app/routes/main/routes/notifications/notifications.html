@@ -1,0 +1,78 @@
+<div class="notifications-page">
+  <div class="notifications-header">
+    <h1>Thông báo</h1>
+    <button class="mark-all-read-button" (click)="markAllAsRead()" type="button">
+      Đánh dấu tất cả đã đọc
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Đang tải...</div>
+  } @else if (notifications().length === 0) {
+    <div class="empty">Không có thông báo nào</div>
+  } @else {
+    <div class="notifications-list">
+      @for (notification of notifications(); track notification.notificationId) {
+        <div 
+          class="notification-item" 
+          [class.unread]="!notification.isRead"
+          role="button"
+          tabindex="0"
+          (click)="navigateToNotification(notification)"
+          (keyup.enter)="navigateToNotification(notification)"
+          (keyup.space)="navigateToNotification(notification)">
+          <div class="notification-content">
+            <div class="notification-header">
+              <div class="notification-title">{{ notification.title }}</div>
+              @if (!notification.isRead) {
+                <span class="unread-indicator"></span>
+              }
+            </div>
+            <div class="notification-message">{{ notification.message }}</div>
+            <div class="notification-meta">
+              <span class="notification-time">{{ formatDate(notification.createdAt) }}</span>
+              @if (notification.senderName) {
+                <span class="notification-sender">Từ: {{ notification.senderName }}</span>
+              }
+            </div>
+          </div>
+          @if (!notification.isRead) {
+            <button 
+              class="mark-read-button"
+              (click)="markAsRead(notification); $event.stopPropagation()"
+              type="button"
+              [attr.aria-label]="'Đánh dấu đã đọc'">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10L9 13L14 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button 
+          class="pagination-button" 
+          [disabled]="currentPage() === 0"
+          (click)="previousPage()"
+          type="button">
+          Trước
+        </button>
+        <span class="pagination-info">
+          Trang {{ currentPage() + 1 }} / {{ totalPages() }}
+        </span>
+        <button 
+          class="pagination-button" 
+          [disabled]="currentPage() >= totalPages() - 1"
+          (click)="nextPage()"
+          type="button">
+          Sau
+        </button>
+      </div>
+    }
+  }
+</div>
+

@@ -1,0 +1,118 @@
+.update-class-drawer {
+  background-color: var(--color-bg-primary);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-8);
+  font-size: 14px;
+  transition: border-color var(--transition-base);
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--color-error-500);
+}
+
+.form-textarea {
+  resize: none;
+  min-height: 100px;
+}
+
+.error-message {
+  color: var(--color-error-600);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border-default);
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border-radius: var(--radius-8);
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--color-primary-600);
+  color: var(--color-white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-700);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-default);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-200);
+}
+
+.btn-secondary:disabled {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

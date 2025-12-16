@@ -1,0 +1,21 @@
+:host {
+	display: block;
+	contain: layout style;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-x-auto {
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+}
+
+._left {
+  transform: rotate(90deg);
+}
+
+._right {
+  transform: rotate(-90deg);
+}

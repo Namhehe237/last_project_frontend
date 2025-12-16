@@ -1,0 +1,75 @@
+<dialog closedby="none" #_submit_dialog class="min-w-600" (close)="onClose()">
+  <div class="p-16">
+    <div class="grid grid-cols-[1fr_auto] gap-x-10">
+      <b class="text-24">{{ submissionId() ? 'Cập nhật bài nộp' : 'Nộp bài tập' }}</b>
+      <button type="button" class="self-start __btn-img" (click)="onClose()">
+        <img src="image/close-icon-black.svg" alt="close" class="w-[24px] h-[24px]"/>
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <div class="text-center py-16 text-gray-500">Đang tải...</div>
+    } @else {
+      <form class="mt-16 mb-16" (ngSubmit)="onSubmit()">
+      <div class="grid gap-y-26">
+        <label class="__fg">
+          <span data-label>Phương thức nộp</span>
+          <div class="flex gap-x-16 mt-8">
+            <label class="flex items-center gap-x-8">
+              <input type="radio" [(ngModel)]="submissionType" (ngModelChange)="onSubmissionTypeChange()" value="LINK" name="submissionType">
+              <span>Link</span>
+            </label>
+            <label class="flex items-center gap-x-8">
+              <input type="radio" [(ngModel)]="submissionType" (ngModelChange)="onSubmissionTypeChange()" value="FILE" name="submissionType">
+              <span>File</span>
+            </label>
+          </div>
+        </label>
+
+        @if (submissionType === 'LINK') {
+          <label class="__fg">
+            <span data-label>Link bài làm</span>
+            <div class="__input-wrapper">
+              <input 
+                type="url" 
+                [(ngModel)]="linkUrl" 
+                (ngModelChange)="onLinkUrlChange()"
+                name="linkUrl" 
+                class="__fc __fc-url" 
+                placeholder="https://..." 
+                required>
+            </div>
+          </label>
+        } @else {
+          <div class="__fg">
+            <span data-label>File bài làm</span>
+            <label>
+              <input 
+                type="file" 
+                (change)="onFileSelected($event)" 
+                accept=".docx,.doc,.xlsx,.xls,.pdf,.pptx,.ppt"
+                class="__fc max-w-200" 
+                required>
+            </label>
+            @if (selectedFile) {
+              <div class="mt-8 text-14 text-gray-600 pointer-events-none">
+                Đã chọn: {{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)
+              </div>
+            }
+            <div class="mt-4 text-12 text-gray-500">
+              Chấp nhận: DOCX, XLSX, PDF, PPT (tối đa 100MB)
+            </div>
+          </div>
+        }
+      </div>
+      </form>
+    }
+  </div>
+
+  <fieldset class="m-0 flex justify-end gap-x-6 border-t-1 border-x-0 border-b-0 border-gray-dd p-16" [disabled]="status() === 1 || isLoading()">
+    <button type="button" class="min-w-120 __btn-1" [class]="{'__spinner-1': status() === 1}" (click)="onSubmit()" [disabled]="!canSubmit() || status() === 1 || isLoading()">
+      {{ submissionId() ? 'Cập nhật' : 'Nộp bài' }}
+    </button>
+  </fieldset>
+</dialog>
+

@@ -1,0 +1,22 @@
+@if (statuses().length > 0) {
+	<div class="_timeline">
+		@for (status of statuses(); track $index) {
+			<div class="_step">
+				<div class="_circle">
+					@if (status.date) {
+						<img src="image/circle-check.svg" alt="checked">
+					}
+					@if (!status.date) {
+						<div class="h-full w-full bg-white rounded-full border border-[#dbe5ea]"></div>
+					}
+				</div>
+				<div class="_info">
+					<div class="_label">{{status.code}}</div>
+					@if (status.date) {
+						<div class="_time">{{status.date}}</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}

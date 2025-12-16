@@ -1,0 +1,154 @@
+.post-card {
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+}
+
+.post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.post-menu {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.post-card:hover .post-menu {
+  opacity: 1;
+}
+
+.menu-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #5f6368;
+  transition: background-color 0.2s;
+}
+
+.menu-icon:hover {
+  background-color: #f1f3f4;
+}
+
+.menu-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.post-content {
+  line-height: 1.6;
+  color: #202124;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.post-content a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.post-content a:hover {
+  text-decoration: underline;
+}
+
+.edit-form {
+  margin-top: 8px;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #1557b0;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  background-color: #f1f3f4;
+  color: #202124;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #e8eaed;
+}
+
+.btn-submit {
+  padding: 8px 16px;
+  background-color: #34a853;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #2d8e47;
+}
+

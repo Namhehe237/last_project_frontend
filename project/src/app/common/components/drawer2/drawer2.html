@@ -1,0 +1,10 @@
+<dialog closedby="none" #_dialog class="w-[1600px] _dialog" (close)="onDialogClose()">
+	<button type="button" (click)="onClose()"
+		class="__btn-img sticky top-[18px] left-0"
+		><img src="image/close-drawer.svg" alt="close drawer"></button>
+	<div class="pl-[18px]">
+		<div class=" bg-white -mt-[36px] p-[24px] min-h-dvh _shadow-1">
+			<ng-content />
+		</div>
+	</div>
+</dialog>

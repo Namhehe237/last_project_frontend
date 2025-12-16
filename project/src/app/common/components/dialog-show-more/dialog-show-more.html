@@ -1,0 +1,31 @@
+<dialog closedby="none" #_dialog (close)="onClose()" class="max-w-[756px] min-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
+	<div class="p-16">
+		<div class="grid grid-cols-[1fr_auto] gap-x-10">
+			<b class="text-24">{{ data().value }}</b>
+			<button type="button" class="self-start __btn-img" (click)="onOkCancel()">
+  			<img src="image/close-icon-black.svg" alt="close" class="w-[24px] h-[24px]"/>
+			</button>
+		</div>
+
+		<div class="flex items-center gap-x-8 mb-24">
+      <div><span class="text-[#8f8f8f]">Order ID: </span><span>{{ data().orderId }}</span></div>
+      <div class="text-[#8f8f8f]">.</div>
+      <div><span class="text-[#8f8f8f]">No. Of {{data().value}}'s: </span><span> {{ data().items.length }} </span></div>
+    </div>
+
+		<div class="pl-0 pr-4 mb-16">
+  		@if (data().items.length > 1) {
+    		<ol class="grid grid-cols-2 gap-x-16 gap-y-8 list-decimal list-inside p-0 m-0">
+      		@for (item of data().items; track item) {
+        		<li class="min-w-0 justify-self-stretch text-14 break-all whitespace-normal px-8">{{ item }}</li>
+      		}
+    		</ol>
+  		} @else if (data().items.length === 1) {
+    		<div class="grid grid-cols-2">
+      		<div class="min-w-0 justify-self-stretch text-14 break-all whitespace-normal px-8">{{ data().items[0] }}</div>
+      		<div></div>
+    		</div>
+  		}
+		</div>
+	</div>
+</dialog>

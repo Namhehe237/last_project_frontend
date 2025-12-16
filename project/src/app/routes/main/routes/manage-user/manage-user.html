@@ -1,0 +1,18 @@
+<div class="flex justify-between items-center mb-16 mt-4">
+	<div class="text-24 font-bold mt-4">Quản lý người dùng</div>
+	<button type="button" class="__btn-1 min-w-120" (click)="openAddUserDialog()">Thêm người dùng</button>
+</div>
+
+<div class="mt-24">
+	<app-card-header [tabList]="tabList" [type]="'tab'" (tabSelected)="onChangeTab($event)"
+		[currentTab]="tab"></app-card-header>
+	@if (tab.value === 'student') {
+		<app-student-list></app-student-list>
+	}
+	@if (tab.value === 'teacher') {
+		<app-teacher-list></app-teacher-list>
+	}
+	@if (tab.value === 'admin') {
+		<app-admin-list></app-admin-list>
+	}
+</div>

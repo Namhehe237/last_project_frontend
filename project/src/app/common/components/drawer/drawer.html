@@ -1,0 +1,39 @@
+<!-- Backdrop -->
+<div
+  [class]="backdropClasses()"
+  role="button"
+  tabindex="0"
+  (click)="onBackdropClick()"
+  (keydown)="onKeyDown($event)">
+</div>
+
+<!-- Drawer -->
+<div
+  [class]="drawerClasses()"
+  role="dialog"
+  [attr.aria-hidden]="!isOpen()"
+  aria-modal="true"
+  (keydown)="onKeyDown($event)">
+
+  <!-- Header -->
+  <div class="_drawer-header flex items-center justify-between pt-40">
+    <h2 class="_drawer-title text-lg font-semibold text-gray-900 m-0">
+      {{title()}}
+    </h2>
+    
+    @if (isOpen() && showCloseIcon()) {
+      <button
+        type="button"
+        class="__btn-img _drawer-close-btn"
+        (click)="close()"
+        aria-label="Close drawer">
+        <img src="image/close-drawer.svg" alt="close" class="w-[28px] h-[28px]"/>
+      </button>
+    }
+  </div>
+
+  <!-- Content -->
+  <div class="_drawer-content overflow-y-auto flex-1">
+    <ng-content></ng-content>
+  </div>
+</div>

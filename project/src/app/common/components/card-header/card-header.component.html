@@ -1,0 +1,26 @@
+@if (type() === 'tab') {
+  <div class="__card-header rounded-t-16 bg-color-3 h-[51px] flex items-center px-24 pt-12 text-14 flex justify-between">
+    <fieldset class="_tab flex items-stretch border-none p-0 m-0">
+      @for (item of tabList(); track item.value) {
+      <label class="px-20 pb-12 m-w-20 cursor-pointer">
+        <input type="radio" name="{{name}}" class="absolute pointer-events-none mask-contain [clip-path:rect(0_0_0_0)]"
+			[value]="item.value"
+			[checked]="currentTab()?.value === item.value"
+			(change)="onChange(item)"
+			>
+			<span class="text-[16px] {{currentTab()?.value === item.value ? 'active' : ''}}">
+				{{item.name}}
+				@if (currentTab()?.value === item.value && count() !== null && count() !== undefined) {
+					&nbsp;({{count()}})
+				}
+			</span>
+		</label>
+      }
+    </fieldset>
+  </div>
+}
+@if (type() !== 'tab') {
+  <div class="__card-header rounded-t-16 bg-color-3 h-[51px] flex items-center px-24 py-12 text-14 flex justify-between">
+    <span class="_title-card">{{title()}}</span>
+  </div>
+}

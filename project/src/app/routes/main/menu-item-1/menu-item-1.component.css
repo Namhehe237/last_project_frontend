@@ -1,0 +1,17 @@
+:host {
+	display: block;
+}
+
+._hover-1:hover:not(._active-1) {
+	background-color: var(--color-gray-f7);
+}
+
+._active-1 {
+	background-color: var(--color-color-2);
+	color: var(--color-white);
+	font-weight: bold;
+
+	.fill-gray-99 {
+		fill: var(--color-white) !important;
+	}
+}

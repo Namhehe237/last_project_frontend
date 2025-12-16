@@ -1,0 +1,19 @@
+<div class="text-24 font-bold mb-16 mt-4">
+  Bài thi của tôi
+</div>
+
+<div class="__card-header rounded-t-16 bg-color-3 items-center px-24 py-12 text-16 flex justify-between h-fit">
+  <span class="title font-bold">Danh sách bài thi</span>
+</div>
+<div class="border-[#fff] rounded-16 bg-white">
+  <app-table [columns]="columns"
+             [dataSource]="exams"
+             [showPaging]="true"
+             [totalElements]="totalElements"
+             [isLoading]="isLoading"
+             (reloadData)="reloadData()"
+             [type]="'exam-table'"
+             (actionClicked)="onActionClick($event)"
+             #dataTable>
+  </app-table>
+</div>

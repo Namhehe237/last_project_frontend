@@ -1,0 +1,75 @@
+<dialog closedby="none" #_create_post class="min-w-756" (close)="onClose()">
+  <div class="p-16">
+    <div class="grid grid-cols-[1fr_auto] gap-x-10">
+      <b class="text-24">Đăng bài</b>
+      <button type="button" class="self-start __btn-img" (click)="onOkCancel()">
+        <img src="image/close-icon-black.svg" alt="close" class="w-[24px] h-[24px]"/>
+      </button>
+    </div>
+
+    <form class="mt-16 mb-16" [formGroup]="form">
+      <div class="grid gap-y-26">
+        <label class="__fg">
+          <span data-label>Loại bài đăng</span>
+          <select formControlName="postType" class="__fc">
+            @for (type of postTypes; track type) {
+              <option [value]="type">{{ type === 'ANNOUNCEMENT' ? 'Thông báo' : 'Bài tập' }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="__fg">
+          <span data-label>Tiêu đề</span>
+          <input type="text" formControlName="title" class="__fc" required>
+        </label>
+
+        <label class="__fg">
+          <span data-label>Nội dung</span>
+          <textarea formControlName="content" class="__fc" rows="5" required></textarea>
+        </label>
+
+        @if (isAssignment) {
+          <div class="grid grid-cols-2 gap-x-26 gap-y-26">
+            <label class="__fg">
+              <span data-label>Ngày hết hạn</span>
+              <div class="__input-wrapper">
+                <input type="datetime-local" formControlName="dueDate" class="__fc __fc-datetime" required>
+              </div>
+            </label>
+
+            <label class="__fg">
+              <span data-label>Điểm tối đa (tùy chọn)</span>
+              <div class="__input-wrapper">
+                <input type="number" formControlName="totalPoints" class="__fc __fc-number" min="0" step="0.1" placeholder="0.0">
+              </div>
+            </label>
+          </div>
+
+          <div class="__fg">
+            <span data-label>File đính kèm (tùy chọn)</span>
+            <label>
+              <input 
+                type="file" 
+                (change)="onFileSelected($event)" 
+                accept=".docx,.doc,.xlsx,.xls,.pdf,.pptx,.ppt"
+                class="__fc max-w-200">
+            </label>
+            @if (selectedFile) {
+              <div class="mt-8 text-14 text-gray-600 pointer-events-none">
+                Đã chọn: {{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)
+              </div>
+            }
+            <div class="mt-4 text-12 text-gray-500">
+              Chấp nhận: DOCX, XLSX, PDF, PPT (tối đa 100MB)
+            </div>
+          </div>
+        }
+      </div>
+    </form>
+  </div>
+
+  <fieldset class="m-0 flex justify-end gap-x-6 border-t-1 border-x-0 border-b-0 border-gray-dd p-16" [disabled]="status() === 1">
+    <button type="button" class="min-w-120 __btn-1" [class]="{'__spinner-1': status() === 1}" [disabled]="!canSubmit() || status() === 1" (click)="onSubmit()">Đăng</button>
+  </fieldset>
+</dialog>
+

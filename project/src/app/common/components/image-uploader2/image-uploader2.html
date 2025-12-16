@@ -1,0 +1,79 @@
+<!-- image-uploader.component.html -->
+<div class="_image-uploader">
+  <!-- Hidden file input -->
+  <input 
+    #_fileInput
+    type="file" 
+    [accept]="acceptedTypes()"
+    multiple
+    (change)="onFileSelected($event)"
+    class="hidden"
+  />
+
+  <!-- Upload drop zone -->
+  @if (maxImages() === null || (maxImages() !== null && images().length < maxImages()!)) {
+    <div 
+      class="_upload-zone"
+      [class._drag-over]="isDragOver()"
+      [class._disabled]="maxImages() !== null && images().length >= maxImages()!"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <div class="_upload-content">
+        <img src="/image/attach-file.svg" alt="Attach File" class="_attach-icon">
+        <div class="_upload-text">
+          <span class="_drag-text">Drag & drop image, or </span>
+          <span 
+            class="_browse-link"
+            (click)="onUploadClick()"
+            (keydown.enter)="onUploadClick()"
+            (keydown.space)="onUploadClick()"
+            tabindex="0"
+            role="button"
+          >Browse</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Uploaded images -->
+  @if (images().length > 0) {
+    <div class="_uploaded-images">
+      @for (image of images(); track image.id) {
+        <div class="_image-item">
+          <img 
+            [src]="image.url" 
+            [alt]="image.name"
+            class="_uploaded-image"
+            (click)="onImageClick(image)"
+            tabindex="0"
+            role="button"
+            (keydown.enter)="onImageClick(image)"
+            (keydown.space)="onImageClick(image)"
+            title="Click to view image"
+          />
+          <button 
+            type="button" 
+            class="_remove-btn"
+            (click)="onRemoveImage(image.id)"
+            title="Remove image"
+          >
+            <svg height="16" viewBox="0 -960 960 960" width="16" fill="#fff">
+              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Image Preview Dialog -->
+  @if (showPreviewDialog() && previewList()) {
+    <app-image-preview-dialog
+      [images]="previewList()!"
+      [startIndex]="previewStartIndex()"
+      (closed)="onPreviewDialogClosed()"
+    />
+  }
+</div>

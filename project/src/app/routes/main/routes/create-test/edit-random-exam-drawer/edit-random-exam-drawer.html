@@ -1,0 +1,118 @@
+<app-drawer
+  [isOpen]="isOpen()"
+  [title]="'Chỉnh sửa đề thi ngẫu nhiên'"
+  [moreClass]="'w-4/5'"
+  (closeDrawer)="onClose()"
+>
+  <div class="flex flex-col gap-16 py-24">
+    <div class="rounded-12 border border-solid border-[#e5e7eb] p-16 bg-white">
+      <div class="text-16 font-semibold mb-8">
+        {{ examData()?.examName }} — {{ examData()?.subjectName }}
+      </div>
+      <div class="text-14 text-gray-500 flex flex-wrap gap-16">
+        <span>Thời gian: {{ examData()?.durationMinutes }} phút</span>
+        <span>Số lần làm: {{ examData()?.maxAttempts }}</span>
+        <span>Lớp: {{ examData()?.className || 'N/A' }}</span>
+        <span>Trạng thái: {{ examData()?.examStatus }}</span>
+      </div>
+    </div>
+
+    <div class="rounded-12 border border-solid border-[#e5e7eb] bg-white max-h-[60vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-[#e5e7eb] px-16 py-12">
+        <div class="text-16 font-semibold">Câu hỏi hiện tại ({{ currentQuestions.length }})</div>
+        <button type="button" class="__btn-1" (click)="onSave()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Đang lưu...' : 'Lưu thay đổi' }}
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto divide-y divide-[#f3f4f6]">
+        @if (currentQuestions.length) {
+          @for (question of currentQuestions; track trackQuestionById($index, question)) {
+            <div class="flex items-start justify-between px-16 py-12">
+              <div>
+                <div class="font-medium">{{ question.questionText }}</div>
+                <div class="text-12 text-gray-500 mt-4">
+                  {{ question.questionType }} • {{ question.difficultyLevel }} • {{ question.subjectName }}
+                </div>
+              </div>
+              <button type="button" class="__btn-2" (click)="removeQuestion(question.questionId)">Xóa</button>
+            </div>
+          }
+        } @else {
+          <div class="px-16 py-24 text-center text-gray-500">
+            Chưa có câu hỏi nào được chọn.
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="rounded-12 border border-solid border-[#e5e7eb] bg-white p-16 flex flex-col max-h-[60vh]">
+      <div class="text-16 font-semibold mb-12">Thêm câu hỏi</div>
+      <form [formGroup]="filtersForm" class="grid grid-cols-3 gap-12 mb-16 items-end">
+        <label class="__fg">
+          <span data-label>Mức độ khó</span>
+          <select class="__fc" formControlName="difficultyLevel">
+            <option value="" hidden>Chọn mức độ khó</option>
+            <option value="EASY">Dễ</option>
+            <option value="MEDIUM">Trung bình</option>
+            <option value="HARD">Khó</option>
+          </select>
+        </label>
+        <label class="__fg">
+          <span data-label>Tên môn học</span>
+          <select class="__fc" formControlName="subjectName">
+            <option value="" hidden>Chọn môn học</option>
+            <option value="Mathematics">Toán học</option>
+            <option value="English">Tiếng Anh</option>
+            <option value="Physics">Vật lý</option>
+            <option value="Chemistry">Hóa học</option>
+            <option value="Biology">Sinh học</option>
+            <option value="History">Lịch sử</option>
+            <option value="Geography">Địa lý</option>
+          </select>
+        </label>
+        <div class="flex justify-end gap-12">
+          <button type="button" class="__btn-2" (click)="onFilterSubmit()">Tìm kiếm</button>
+          <button type="button" class="__btn-2" (click)="onClearFilters()">Đặt lại</button>
+        </div>
+      </form>
+
+      <div class="border border-[#f3f4f6] rounded-12 flex-1 flex flex-col">
+        <div class="grid grid-cols-[2fr_1fr_1fr_80px] gap-12 px-16 py-8 text-12 font-semibold text-gray-500 border-b border-[#f3f4f6]">
+          <span>Câu hỏi</span>
+          <span>Loại</span>
+          <span>Độ khó</span>
+          <span></span>
+        </div>
+        <div class="flex-1 overflow-auto">
+          @if (isLoadingAvailable) {
+            <div class="px-16 py-24 text-center text-gray-500">Đang tải câu hỏi...</div>
+          } @else if (!availableQuestions.length) {
+            <div class="px-16 py-24 text-center text-gray-500">Không tìm thấy câu hỏi nào</div>
+          } @else {
+            @for (question of availableQuestions; track question.questionId) {
+              <div class="grid grid-cols-[2fr_1fr_1fr_80px] gap-12 px-16 py-10 border-b border-[#f3f4f6] items-center">
+                <div class="text-14 font-medium">{{ question.questionText }}</div>
+                <div class="text-12 text-gray-500">{{ question.questionType }}</div>
+                <div class="text-12 text-gray-500">{{ question.difficultyLevel }}</div>
+                <button type="button" class="__btn-2 text-12" (click)="addQuestion(question)">Thêm</button>
+              </div>
+            }
+          }
+        </div>
+        <div class="flex items-center justify-between px-16 py-12 text-12 text-gray-500">
+          <span>Trang {{ availablePage + 1 }} / {{ availableTotalPages || 1 }}</span>
+          <div class="flex gap-8">
+            <button type="button" class="__btn-2" [disabled]="availablePage === 0" (click)="loadAvailableQuestions(availablePage - 1)">Trước</button>
+            <button type="button" class="__btn-2"
+              [disabled]="availablePage + 1 >= availableTotalPages"
+              (click)="loadAvailableQuestions(availablePage + 1)"
+            >
+              Sau
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-drawer>
+

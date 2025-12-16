@@ -1,0 +1,57 @@
+/* Dialog form alignment */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.form-input,
+.form-textarea,
+select.__fc,
+input.__fc {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-8);
+  background: var(--color-bg-primary);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+select.__fc:focus,
+input.__fc:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Disabled form fields styling - grayed out/blurred */
+textarea.__fc:disabled,
+select.__fc:disabled,
+input.__fc:disabled {
+  background-color: var(--color-bg-disabled, #f5f5f5);
+  color: var(--color-text-disabled, #999);
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: var(--color-border-disabled, #d0d0d0);
+}
+
+.error-message {
+  color: var(--color-error-600);
+  font-size: 12px;
+  margin-top: 4px;
+}
+

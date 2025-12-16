@@ -1,0 +1,75 @@
+/* You can add global styles to this file, and also import other style files */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./style/theme.css" layer(theme);
+@import "./style/components.css" layer(components);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+
+
+/*
+@import "tailwindcss";
+@import "./style/theme.css" layer(theme);
+@import "./style/components.css" layer(components);
+*/
+
+
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		box-sizing: border-box; /* 1 */
+	}
+
+	
+	
+	html {
+		font-family: 'SamsungOne', 'SamsungSharpSans', 'sans-serif';
+		-webkit-text-size-adjust: 100%;
+		interpolate-size: allow-keywords;
+		/* line-height: 1.5; */
+		scroll-behavior: smooth;
+	}
+	
+	body {
+		margin: 0;
+		color: var(--color-text-primary);
+		background-color: var(--color-bg-secondary);
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	* {
+		outline-color: var(--color-color-accent);
+	}
+
+	/* Headings */
+	h1, h2, h3, h4, h5, h6 {
+		color: var(--color-text-primary);
+		margin: 0 0 0.5rem 0;
+		font-weight: var(--font-weight-bold);
+	}
+
+	/* Links */
+	a {
+		color: var(--color-text-link);
+		text-decoration: none;
+		transition: color var(--transition-fast);
+	}
+
+	a:hover, a:focus {
+		color: var(--color-text-link-hover);
+		text-decoration: underline;
+	}
+
+	a:focus-visible {
+		outline: 2px solid var(--color-border-focus);
+		outline-offset: 2px;
+	}
+
+
+}

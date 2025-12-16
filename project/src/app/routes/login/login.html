@@ -1,0 +1,45 @@
+<div class="h-screen flex items-center justify-center bg-linear-to-br from-primary-400 to-primary-50">
+<div class="flex items-center justify-center bg-white rounded-24">
+	<div class="w-533 p-24">
+		<div class="flex justify-center mb-50">
+			<div class="text-26 font-bold">SMART EXAM</div>
+		</div>
+
+		<form [formGroup]="form" (ngSubmit)="onSubmit()">
+			<div class="grid gap-y-26">
+				<label class="__fg">
+					<span data-label>Email</span>
+					<input type="text" required pattern="\S*" autocomplete="email" formControlName="email" class="__fc">
+					@if (form.get('email')?.touched && form.get('email')?.errors) {
+						<div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+							@if (form.get('email')?.errors?.['required']) {
+								Email là bắt buộc
+							} @else if (form.get('email')?.errors?.['email']) {
+								Vui lòng nhập địa chỉ email hợp lệ
+							}
+						</div>
+					}
+				</label>
+				<label class="__fg">
+					<span data-label>Mật khẩu</span>
+					<input type="password" required pattern="\S*" autocomplete="new-password" formControlName="password" class="__fc">
+					@if (form.get('password')?.touched && form.get('password')?.errors) {
+						<div style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+							@if (form.get('password')?.errors?.['required']) {
+								Mật khẩu là bắt buộc
+							} @else if (form.get('password')?.errors?.['minlength']) {
+								Mật khẩu phải có ít nhất 6 ký tự
+							}
+						</div>
+					}
+				</label>
+				<a href="register" class="justify-self-end underline text-14 font-bold">Đăng ký</a>
+			</div>
+			<div class="flex mt-50">
+				<button type="submit" class="w-full __btn-1" [class]="{'__spinner-1': state() === 1}"
+				[disabled]="form.invalid || form.disabled">Đăng nhập</button>
+			</div>
+		</form>
+	</div>
+</div>
+</div>

@@ -1,0 +1,64 @@
+<div class="_image-uploader">
+  <!-- Hidden file input -->
+  <input 
+    #_fileInput
+    type="file" 
+    [accept]="acceptedTypes()"
+    multiple
+    (change)="onFileSelected($event)"
+    class="hidden"
+  />
+
+  <!-- Upload button (default image) -->
+	 @if (maxImages() === null || (maxImages() !== null && images().length < maxImages()!)) {
+  <div 
+    class="_upload-placeholder"
+    [class.disabled]="maxImages() !== null && images().length >= maxImages()!"
+    (click)="onUploadClick()"
+    (keydown.enter)="onUploadClick()"
+    (keydown.space)="onUploadClick()"
+    tabindex="0"
+    role="button"
+  >
+    <img src="/image/add-image.svg" alt="Add image" class="_upload-icon" />
+  </div>
+	}
+
+  <!-- Uploaded images -->
+  <div class="_uploaded-images">
+    @for (image of images(); track image.id) {
+      <div class="_image-item">
+        <img 
+          [src]="image.url" 
+          [alt]="image.name"
+          class="_uploaded-image"
+          (click)="onImageClick(image)"
+          tabindex="0"
+          role="button"
+          (keydown.enter)="onImageClick(image)"
+          (keydown.space)="onImageClick(image)"
+          title="Click to view image"
+        />
+        <button 
+          type="button" 
+          class="_remove-btn"
+          (click)="onRemoveImage(image.id)"
+          title="Remove image"
+        >
+          <svg height="16" viewBox="0 -960 960 960" width="16" fill="#fff">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Image Preview Dialog -->
+  @if (showPreviewDialog() && previewList()) {
+    <app-image-preview-dialog
+      [images]="previewList()!"
+      [startIndex]="previewStartIndex()"
+      (closed)="onPreviewDialogClosed()"
+    />
+  }
+</div> 

@@ -1,0 +1,45 @@
+<div class="_uploader">
+  <!-- hidden input -->
+  <input
+    #_fileInput
+    class="hidden"
+    type="file"
+    [accept]="acceptedTypes()"
+    multiple
+    (change)="onFileSelected($event)"
+  />
+
+  <!-- drop/click zone -->
+  <div
+    class="_dropzone"
+    [class._dragging]="isDragOver()"
+    [class._disabled]="isLimitReached()"
+    (click)="onUploadClick()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    tabindex="0"
+    role="button"
+    (keydown.enter)="onUploadClick()"
+    (keydown.space)="onUploadClick()"
+    aria-label="Choose or drag & drop files"
+  >
+    <img src="/image/attach-file.svg" alt="" class="_attach" />
+    <span class="_label">Choose or Drag & Drop</span>
+  </div>
+
+  <!-- files list -->
+  @if (files().length > 0) {
+    <div class="_file-list">
+      @for (f of files(); track f.id) {
+        <div class="_file-chip" title="{{f.name}}">
+          <img class="_file-icon" [src]="iconFor(f.type)" alt="" />
+          <span class="_file-name">{{ f.name }}</span>
+          <button type="button" class="_close" (click)="removeFile(f.id)" aria-label="Remove file">
+            <img src="image/close-icon-white.svg" alt="Remove" class="_close-icon" /> 
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>
