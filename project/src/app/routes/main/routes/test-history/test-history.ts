@@ -44,12 +44,12 @@ export class TestHistory implements OnInit {
   testHistory: TestHistoryRow[] = [];
   
   columns: ColumnInterface[] = [
-    { title: 'EXAM NAME', field: 'examName', isStickyFirst: true, isHref: true },
-    { title: 'SUBJECT', field: 'subjectName' },
-    { title: 'SCORE', field: 'scoreDisplay' },
-    { title: 'CORRECT/TOTAL', field: 'scoreDetail' },
-    { title: 'SUBMIT TIME', field: 'submitTime' },
-    { title: 'STATUS', field: 'status' },
+    { title: 'TÊN BÀI THI', field: 'examName', isStickyFirst: true, isHref: true },
+    { title: 'MÔN HỌC', field: 'subjectName' },
+    { title: 'ĐIỂM', field: 'scoreDisplay' },
+    { title: 'SỐ CÂU ĐÚNG/TỔNG', field: 'scoreDetail' },
+    { title: 'THỜI GIAN NỘP', field: 'submitTime' },
+    { title: 'TRẠNG THÁI', field: 'status' },
     { title: 'VIDEO', field: 'videoLink', isStickyEnd: true, isHref: true },
   ];
 
