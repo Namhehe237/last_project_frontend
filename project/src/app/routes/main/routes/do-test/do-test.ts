@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, ElementRef, inject, viewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '#common/services/exam.service';
 import { ExamSnapshot, ExamQuestionSnapshot } from '#common/models/ExamSnapshot';
@@ -23,6 +23,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
   readonly #notification = inject(NotificationService);
   readonly #antiCheat = inject(AntiCheatService);
   readonly #cdr = inject(ChangeDetectorRef);
+  readonly #ngZone = inject(NgZone);
   private readonly destroy$ = new Subject<void>();
 
   examId: number | null = null;
@@ -361,14 +362,17 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
 
   private startTimer(): void {
     if (this.timerId) clearInterval(this.timerId);
+    // Ensure timer runs inside Angular zone for proper change detection
     this.timerId = setInterval(() => {
-      if (this.remainingSeconds > 0) {
-        this.remainingSeconds -= 1;
-        this.#cdr.markForCheck();
-        if (this.remainingSeconds === 0) {
-          void this.onSubmit();
+      this.#ngZone.run(() => {
+        if (this.remainingSeconds > 0) {
+          this.remainingSeconds -= 1;
+          this.#cdr.markForCheck();
+          if (this.remainingSeconds === 0) {
+            void this.onSubmit();
+          }
         }
-      }
+      });
     }, 1000);
   }
 
