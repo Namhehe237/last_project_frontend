@@ -52,7 +52,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
   readonly cameraWrapper = viewChild.required<ElementRef<HTMLDivElement>>('cameraWrapper');
   
   // Drag and drop for camera
-  cameraPosition = { x: 20, y: 20 };
+  cameraPosition = { x: 20, y: 20 }; // Will be set to bottom-left in loadCameraPosition if not saved
   isDragging = false;
   dragOffset = { x: 0, y: 0 };
 
@@ -542,7 +542,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
     const newY = event.clientY - this.dragOffset.y;
     
     // Keep camera within viewport bounds
-    const maxX = window.innerWidth - 320; // camera width
+    const maxX = window.innerWidth - 180; // camera width
     const maxY = window.innerHeight - 240; // camera height
     
     this.cameraPosition.x = Math.max(0, Math.min(newX, maxX));
@@ -578,10 +578,25 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
         const pos = JSON.parse(saved) as { x?: number; y?: number } | null;
         if (pos && typeof pos.x === 'number' && typeof pos.y === 'number') {
           this.cameraPosition = { x: pos.x, y: pos.y };
+          return;
         }
       }
+      // Default position: bottom-left corner
+      // Camera size: 320x240px, margin: 20px from edges
+      const cameraHeight = 240;
+      const margin = 20;
+      this.cameraPosition = {
+        x: margin,
+        y: window.innerHeight - cameraHeight - margin
+      };
     } catch {
-      // Ignore localStorage errors
+      // Ignore localStorage errors, use default bottom-left position
+      const cameraHeight = 240;
+      const margin = 20;
+      this.cameraPosition = {
+        x: margin,
+        y: window.innerHeight - cameraHeight - margin
+      };
     }
   }
 }
