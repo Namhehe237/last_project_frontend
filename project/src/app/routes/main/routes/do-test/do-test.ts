@@ -226,7 +226,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
     this.#examService.forceSubmitExam(this.examId, userId, violationType).subscribe({
       next: (grade) => {
         this.isSubmitting = false;
-        this.#notification.show(`Bài thi đã được nộp do vi phạm. Điểm: ${grade.score}/${grade.totalQuestions}`, 'error');
+        this.#notification.show(`Bài thi đã được nộp do vi phạm. Điểm: ${grade.score}`, 'error');
         void this.#router.navigate(['/main/test-history']);
         this.#cdr.markForCheck();
       },
@@ -562,8 +562,8 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
     const newY = event.clientY - this.dragOffset.y;
     
     // Keep camera within viewport bounds
-    const maxX = window.innerWidth - 180; // camera width
-    const maxY = window.innerHeight - 240; // camera height
+    const maxX = window.innerWidth - 240; // camera width
+    const maxY = window.innerHeight - 180; // camera height
     
     this.cameraPosition.x = Math.max(0, Math.min(newX, maxX));
     this.cameraPosition.y = Math.max(0, Math.min(newY, maxY));
@@ -602,8 +602,8 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       // Default position: bottom-left corner
-      // Camera size: 320x240px, margin: 20px from edges
-      const cameraHeight = 240;
+      // Camera size: 240x180px, margin: 20px from edges
+      const cameraHeight = 180;
       const margin = 20;
       this.cameraPosition = {
         x: margin,
@@ -611,7 +611,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
       };
     } catch {
       // Ignore localStorage errors, use default bottom-left position
-      const cameraHeight = 240;
+      const cameraHeight = 180;
       const margin = 20;
       this.cameraPosition = {
         x: margin,
