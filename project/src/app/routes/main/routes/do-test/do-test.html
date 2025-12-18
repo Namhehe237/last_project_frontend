@@ -26,6 +26,20 @@
     </div>
   }
 
+  <!-- Tab/Focus Warning -->
+  @if (!violationDetected && (tabSwitchCount > 0 || focusLossCount > 0)) {
+    <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-16 rounded-8 mb-16">
+      <p class="font-semibold mb-4">Cảnh báo vi phạm:</p>
+      @if (tabSwitchCount > 0) {
+        <p class="text-14">Chuyển tab: {{ tabSwitchCount }}/{{ maxTabSwitches }}</p>
+      }
+      @if (focusLossCount > 0) {
+        <p class="text-14">Mất focus: {{ focusLossCount }}/{{ maxFocusLoss }}</p>
+      }
+      <p class="text-14 mt-4 font-medium">Nếu tiếp tục vi phạm, bài thi sẽ được tự động nộp với 0 điểm.</p>
+    </div>
+  }
+
   <!-- Main Layout -->
   <div class="flex gap-24">
     <!-- Main Content Area -->

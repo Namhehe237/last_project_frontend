@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, ElementRef, inject, viewChild, NgZone } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { ExamService } from '#common/services/exam.service';
 import { ExamSnapshot, ExamQuestionSnapshot } from '#common/models/ExamSnapshot';
 import { AuthService } from '#common/services/auth.service';
 import { NotificationService } from '#common/services/notification.service';
 import { AntiCheatService } from '#common/services/anti-cheat.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -51,6 +51,17 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
   readonly videoContainer = viewChild.required<ElementRef<HTMLDivElement>>('videoContainer');
   readonly cameraWrapper = viewChild.required<ElementRef<HTMLDivElement>>('cameraWrapper');
   
+  // Tab/focus monitoring
+  tabSwitchCount = 0;
+  focusLossCount = 0;
+  readonly maxTabSwitches = 3; // Auto-submit after 3 tab switches
+  readonly maxFocusLoss = 5; // Auto-submit after 5 focus losses
+  private isWindowFocused = true;
+  private visibilityChangeHandler: (() => void) | null = null;
+  private focusHandler: (() => void) | null = null;
+  private blurHandler: (() => void) | null = null;
+  private beforeUnloadHandler: ((event: BeforeUnloadEvent) => string | null) | null = null;
+  
   // Drag and drop for camera
   cameraPosition = { x: 20, y: 20 }; // Will be set to bottom-left in loadCameraPosition if not saved
   isDragging = false;
@@ -80,6 +91,12 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
     // Setup violation listener
     this.setupViolationListener();
 
+    // Setup tab/focus monitoring
+    this.setupTabAndFocusMonitoring();
+    
+    // Block router navigation
+    this.blockRouterNavigation();
+
     // Start monitoring through backend service
     void this.initializeAntiCheat();
     
@@ -97,6 +114,9 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
     
     // Cleanup drag event listeners
     this.cleanupDragListeners();
+    
+    // Cleanup tab/focus monitoring
+    this.cleanupTabAndFocusMonitoring();
     
     // Save camera position to localStorage
     this.saveCameraPosition();
@@ -598,5 +618,132 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
         y: window.innerHeight - cameraHeight - margin
       };
     }
+  }
+
+  private setupTabAndFocusMonitoring(): void {
+    // Page Visibility API - detect tab switches
+    this.visibilityChangeHandler = () => {
+      if (this.violationDetected || this.isSubmitting) return;
+      
+      if (document.hidden) {
+        // Tab switched or window minimized
+        this.tabSwitchCount++;
+        this.#notification.show(
+          `Cảnh báo: Đã phát hiện chuyển tab (${this.tabSwitchCount}/${this.maxTabSwitches}). Nếu tiếp tục, bài thi sẽ được tự động nộp.`,
+          'error',
+          5000
+        );
+        
+        if (this.tabSwitchCount >= this.maxTabSwitches) {
+          this.handleTabSwitchViolation();
+        }
+        this.#cdr.markForCheck();
+      }
+    };
+    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
+
+    // Window focus/blur - detect switching to other applications
+    this.focusHandler = () => {
+      if (this.violationDetected || this.isSubmitting) return;
+      this.isWindowFocused = true;
+    };
+    window.addEventListener('focus', this.focusHandler);
+
+    this.blurHandler = () => {
+      if (this.violationDetected || this.isSubmitting) return;
+      this.isWindowFocused = false;
+      this.focusLossCount++;
+      
+      this.#notification.show(
+        `Cảnh báo: Đã phát hiện mất focus (${this.focusLossCount}/${this.maxFocusLoss}). Nếu tiếp tục, bài thi sẽ được tự động nộp.`,
+        'error',
+        5000
+      );
+      
+      if (this.focusLossCount >= this.maxFocusLoss) {
+        this.handleFocusLossViolation();
+      }
+      this.#cdr.markForCheck();
+    };
+    window.addEventListener('blur', this.blurHandler);
+
+    // Prevent page unload/navigation
+    this.beforeUnloadHandler = (event: BeforeUnloadEvent) => {
+      if (this.violationDetected || this.isSubmitting) {
+        return null; // Allow navigation if already submitting
+      }
+      
+      const message = 'Bạn đang trong quá trình làm bài thi. Bạn có chắc chắn muốn rời khỏi trang này?';
+      event.preventDefault();
+      return message;
+    };
+    window.addEventListener('beforeunload', this.beforeUnloadHandler);
+  }
+
+  private cleanupTabAndFocusMonitoring(): void {
+    if (this.visibilityChangeHandler) {
+      document.removeEventListener('visibilitychange', this.visibilityChangeHandler);
+      this.visibilityChangeHandler = null;
+    }
+    if (this.focusHandler) {
+      window.removeEventListener('focus', this.focusHandler);
+      this.focusHandler = null;
+    }
+    if (this.blurHandler) {
+      window.removeEventListener('blur', this.blurHandler);
+      this.blurHandler = null;
+    }
+    if (this.beforeUnloadHandler) {
+      window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+      this.beforeUnloadHandler = null;
+    }
+  }
+
+  private blockRouterNavigation(): void {
+    // Block all navigation attempts within the app
+    this.#router.events
+      .pipe(
+        filter(event => event instanceof NavigationStart),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event) => {
+        if (this.violationDetected || this.isSubmitting) {
+          return; // Allow navigation if already submitting or violation detected
+        }
+        
+        // Allow navigation only if it's the submit navigation or test-history
+        const allowedPaths = ['/main/test-history'];
+        const isAllowed = allowedPaths.some(path => event.url.includes(path));
+        
+        if (!isAllowed) {
+          // Prevent navigation
+          void this.#router.navigate([this.#route.snapshot.url.join('/')], { replaceUrl: true });
+          this.#notification.show('Không thể rời khỏi trang làm bài trong khi đang làm bài thi!', 'error');
+        }
+      });
+  }
+
+  private handleTabSwitchViolation(): void {
+    if (this.violationDetected || this.isSubmitting) return;
+    
+    this.violationDetected = true;
+    this.#notification.show(
+      'Vi phạm: Đã chuyển tab quá nhiều lần. Bài thi sẽ được tự động nộp với 0 điểm.',
+      'error',
+      10000
+    );
+    this.forceSubmitExam('tab_switch');
+  }
+
+  private handleFocusLossViolation(): void {
+    if (this.violationDetected || this.isSubmitting) return;
+    
+    this.violationDetected = true;
+    this.#notification.show(
+      'Vi phạm: Đã mất focus quá nhiều lần. Bài thi sẽ được tự động nộp với 0 điểm.',
+      'error',
+      10000
+    );
+    this.forceSubmitExam('focus_loss');
   }
 }
