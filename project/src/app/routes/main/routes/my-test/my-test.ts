@@ -85,7 +85,7 @@ export class MyTest implements OnInit {
       const data = event.data as Partial<ExamDetailResponse>;
       const examId = data.examId;
       if (examId != null) {
-        void this.router.navigate(['/main/do-test', examId]);
+        void this.router.navigate(['/main/pre-test', examId]);
       }
     }
   }

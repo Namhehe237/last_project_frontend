@@ -26,6 +26,14 @@ export default [
 			}
 		},
 		{
+			path: 'pre-test/:examId',
+			loadComponent: () => import('./routes/pre-test/pre-test').then(c => c.PreTest),
+			canActivate: [authoritiesGuard],
+			data: {
+				allow: ['STUDENT']
+			}
+		},
+		{
 			path: 'do-test/:examId',
 			loadComponent: () => import('./routes/do-test/do-test').then(c => c.DoTest),
 			canActivate: [authoritiesGuard],

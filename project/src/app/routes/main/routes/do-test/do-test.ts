@@ -5,6 +5,7 @@ import { ExamSnapshot, ExamQuestionSnapshot } from '#common/models/ExamSnapshot'
 import { AuthService } from '#common/services/auth.service';
 import { NotificationService } from '#common/services/notification.service';
 import { AntiCheatService } from '#common/services/anti-cheat.service';
+import { DialogService } from '#common/services/dialog.service';
 import { takeUntil, filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -22,6 +23,7 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
   readonly #auth = inject(AuthService);
   readonly #notification = inject(NotificationService);
   readonly #antiCheat = inject(AntiCheatService);
+  readonly #dialog = inject(DialogService);
   readonly #cdr = inject(ChangeDetectorRef);
   readonly #ngZone = inject(NgZone);
   private readonly destroy$ = new Subject<void>();
@@ -499,6 +501,29 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSubmit(): Promise<void> {
+    if (this.isSubmitting || this.violationDetected) return;
+    const userId = this.#auth.userId;
+    if (!userId || !this.examId) {
+      this.#notification.show('Phiên hoặc bài thi không hợp lệ', 'error');
+      return;
+    }
+
+    if (this.remainingSeconds > 0) {
+      const remainingTime = this.fmtTime(this.remainingSeconds);
+      const dialog = this.#dialog.openDialogConfirmSubmit(remainingTime);
+      
+      dialog.closed.subscribe((confirmed) => {
+        if (confirmed) {
+          void this.submitExam();
+        }
+      });
+      return;
+    }
+
+    await this.submitExam();
+  }
+
+  private async submitExam(): Promise<void> {
     if (this.isSubmitting || this.violationDetected) return;
     const userId = this.#auth.userId;
     if (!userId || !this.examId) {
