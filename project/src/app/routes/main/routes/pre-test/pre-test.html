@@ -1,0 +1,232 @@
+<div class="max-w-4xl mx-auto py-24 px-16">
+  <div class="text-24 font-bold mb-24 text-center">
+    Chuẩn bị làm bài thi
+  </div>
+
+  <!-- Permission Section -->
+  <div class="bg-white rounded-16 p-24 shadow-md mb-24">
+    <h2 class="text-20 font-semibold mb-16">Yêu cầu quyền truy cập</h2>
+    <p class="text-14 text-gray-600 mb-20">
+      Để đảm bảo tính công bằng trong quá trình làm bài thi, hệ thống cần quyền truy cập camera và microphone của bạn.
+    </p>
+
+    <div class="space-y-16">
+      <!-- Camera Permission -->
+      <div class="border border-gray-200 rounded-12 p-16">
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-12">
+            <svg class="w-24 h-24 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            <div>
+              <h3 class="text-16 font-semibold">Camera</h3>
+              <p class="text-12 text-gray-600">Trạng thái: 
+                <span [class]="getPermissionStatusClass(cameraPermission)">
+                  {{ getPermissionStatusText(cameraPermission) }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <button type="button"
+                  class="__btn-2-sm"
+                  [disabled]="isTestingCamera"
+                  (click)="testCamera()">
+            {{ isTestingCamera ? 'Đang kiểm tra...' : 'Kiểm tra camera' }}
+          </button>
+        </div>
+        
+        @if (isTestingCamera) {
+          <div class="mt-12">
+            <video #videoElement 
+                   class="w-full max-w-320 rounded-8 border border-gray-300"
+                   autoplay
+                   playsinline
+                   muted></video>
+            <p class="text-12 text-gray-600 mt-8">Camera đang hoạt động. Nhấn "Kiểm tra camera" lần nữa để tắt.</p>
+          </div>
+        }
+      </div>
+
+      <!-- Microphone Permission -->
+      <div class="border border-gray-200 rounded-12 p-16">
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-12">
+            <svg class="w-24 h-24 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+            </svg>
+            <div>
+              <h3 class="text-16 font-semibold">Microphone</h3>
+              <p class="text-12 text-gray-600">Trạng thái: 
+                <span [class]="getPermissionStatusClass(microphonePermission)">
+                  {{ getPermissionStatusText(microphonePermission) }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <button type="button"
+                  class="__btn-2-sm"
+                  [disabled]="isTestingMicrophone"
+                  (click)="testMicrophone()">
+            {{ isTestingMicrophone ? 'Đang kiểm tra...' : 'Kiểm tra microphone' }}
+          </button>
+        </div>
+        
+        @if (isTestingMicrophone) {
+          <div class="mt-12">
+            <div class="flex items-center gap-12 p-12 bg-green-50 rounded-8 border border-green-200">
+              <div class="w-12 h-12 rounded-full bg-green-500 animate-pulse"></div>
+              <p class="text-14 text-green-700">Microphone đang hoạt động. Nhấn "Kiểm tra microphone" lần nữa để tắt.</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Request Permissions Button -->
+      <div class="pt-16 border-t border-gray-200 flex justify-end">
+        <button type="button"
+                class="__btn-1 w-200"
+                (click)="requestPermissions()">
+          Cấp quyền truy cập
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules Section -->
+  <div class="bg-white rounded-16 p-24 shadow-md mb-24">
+    <h2 class="text-20 font-semibold mb-16">Quy định và các vi phạm</h2>
+    <p class="text-14 text-gray-600 mb-20">
+      Vui lòng đọc kỹ các quy định sau. Vi phạm bất kỳ quy định nào sẽ dẫn đến việc bài thi được tự động nộp với điểm 0.
+    </p>
+
+    <div class="space-y-16">
+      <!-- Rule 1: Camera and Microphone -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">1</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Camera và Microphone phải luôn bật</h3>
+          <p class="text-14 text-gray-700">
+            Camera và microphone của bạn phải được bật trong suốt quá trình làm bài thi. 
+            Hệ thống sẽ giám sát liên tục để đảm bảo bạn đang làm bài một cách trung thực.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 2: No Tab Switching -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">2</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Không được chuyển tab</h3>
+          <p class="text-14 text-gray-700">
+            Bạn không được phép chuyển sang tab khác hoặc cửa sổ khác trong trình duyệt. 
+            Vi phạm quá <strong>3 lần</strong> sẽ dẫn đến việc bài thi được tự động nộp với điểm 0.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 3: No Focus Loss -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">3</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Không được mất focus khỏi cửa sổ</h3>
+          <p class="text-14 text-gray-700">
+            Bạn không được phép chuyển sang ứng dụng khác hoặc mất focus khỏi cửa sổ làm bài thi. 
+            Vi phạm quá <strong>5 lần</strong> sẽ dẫn đến việc bài thi được tự động nộp với điểm 0.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 4: Eye Gaze Monitoring -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">4</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Giám sát ánh mắt</h3>
+          <p class="text-14 text-gray-700">
+            Hệ thống sẽ giám sát ánh mắt của bạn để phát hiện các hành vi gian lận như nhìn ra ngoài màn hình, 
+            nhìn xuống điện thoại, hoặc các thiết bị khác.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 5: Voice Monitoring -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">5</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Giám sát âm thanh</h3>
+          <p class="text-14 text-gray-700">
+            Hệ thống sẽ giám sát âm thanh xung quanh để phát hiện các hành vi gian lận như nói chuyện với người khác, 
+            sử dụng thiết bị hỗ trợ, hoặc các âm thanh bất thường.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 6: Face Presence -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">6</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Phải có mặt trong khung hình</h3>
+          <p class="text-14 text-gray-700">
+            Khuôn mặt của bạn phải luôn xuất hiện trong khung hình camera. 
+            Việc che mặt, quay mặt đi, hoặc không có mặt trong khung hình sẽ bị coi là vi phạm.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rule 7: No Navigation -->
+      <div class="flex gap-12">
+        <div class="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-2">
+          <span class="text-14 font-bold text-red-600">7</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-16 font-semibold mb-4">Không được rời khỏi trang làm bài</h3>
+          <p class="text-14 text-gray-700">
+            Bạn không được phép rời khỏi trang làm bài thi bằng bất kỳ cách nào (đóng tab, điều hướng, 
+            hoặc các hành động khác). Hệ thống sẽ chặn mọi nỗ lực rời khỏi trang.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-24 p-16 bg-red-50 border border-red-200 rounded-12">
+      <p class="text-14 text-red-800 font-semibold">
+        ⚠️ Lưu ý: Bất kỳ vi phạm nào trong số trên sẽ được lưu lại hoặc buộc bạn phải dừng bài thi. 
+        Vui lòng tuân thủ nghiêm ngặt các quy định để đảm bảo kết quả thi của bạn.
+      </p>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-12 justify-end">
+    <button type="button"
+            class="__btn-2"
+            (click)="onCancel()">
+      Hủy
+    </button>
+    <button type="button"
+            class="__btn-1"
+            [disabled]="!canProceed()"
+            (click)="onProceed()">
+      Vào thi
+    </button>
+  </div>
+
+  @if (!canProceed()) {
+    <div class="mt-12 text-center">
+      <p class="text-14 text-gray-600">
+        Vui lòng cấp quyền truy cập camera và microphone để tiếp tục
+      </p>
+    </div>
+  }
+</div>
