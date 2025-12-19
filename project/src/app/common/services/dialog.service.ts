@@ -6,6 +6,7 @@ import { DialogCreateClass } from '../../routes/main/routes/manage-class/dialog-
 import { DialogJoinClass } from '../../routes/main/routes/my-class-student/dialog-join-class/dialog-join-class';
 import { DialogCreateQuestion } from '../../routes/main/routes/create-test/dialog-create-question/dialog-create-question';
 import { DialogExamStudents } from '../../routes/main/routes/exam-management/dialog-exam-students/dialog-exam-students';
+import { DialogConfirmSubmit } from '../../routes/main/routes/do-test/dialog-confirm-submit/dialog-confirm-submit';
 import { TeacherExam } from '#common/models/TeacherExam';
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,15 @@ export class DialogService {
     const compRef = this.#vcr.createComponent(DialogExamStudents);
     compRef.setInput('compRef', compRef);
     compRef.setInput('exam', exam);
+    // compRef.changeDetectorRef.detectChanges();
+    compRef.instance.open();
+    return compRef.instance;
+  }
+
+  openDialogConfirmSubmit(remainingTime: string): DialogConfirmSubmit {
+    const compRef = this.#vcr.createComponent(DialogConfirmSubmit);
+    compRef.setInput('compRef', compRef);
+    compRef.setInput('remainingTime', remainingTime);
     // compRef.changeDetectorRef.detectChanges();
     compRef.instance.open();
     return compRef.instance;
