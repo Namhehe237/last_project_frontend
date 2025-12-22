@@ -167,5 +167,9 @@ export class EditRandomExamDrawer implements OnChanges {
   trackQuestionById(_index: number, question: RandomExamQuestionSummary) {
     return question.questionId;
   }
+
+  isQuestionAdded(questionId: number): boolean {
+    return this.currentQuestions.some(q => q.questionId === questionId);
+  }
 }
 
