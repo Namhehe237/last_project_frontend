@@ -57,7 +57,7 @@ export class DialogJoinClass {
 
     const studentId = this.#authService.userId;
     if (!studentId) {
-      this.#notificationService.show('User not authenticated!', 'error');
+      this.#notificationService.show('Người dùng chưa được xác thực!', 'error');
       this.status.set(0);
       return;
     }
@@ -66,13 +66,13 @@ export class DialogJoinClass {
       next: () => {
         this.joinClassResult.emit(true);
         this.status.set(0);
-        this.#notificationService.show('Join class request sent successfully!', 'success');
+        this.#notificationService.show('Yêu cầu tham gia lớp học đã được gửi thành công!', 'success');
         this.onOkCancel();
       },
       error: () => {
         this.joinClassResult.emit(false);
         this.status.set(0);
-        this.#notificationService.show('Failed to send join class request', 'error');
+        this.#notificationService.show('Không thể gửi yêu cầu tham gia lớp học', 'error');
         this.onOkCancel();
       }
     });

@@ -32,26 +32,26 @@ export class MyClassStudent implements OnInit {
   classes: ClassInterface[] = [];
   columns: ColumnInterface[] = [
     {
-      title: 'CLASS CODE',
+      title: 'MÃ LỚP',
       field: 'classCode',
       isStickyFirst: true,
       isHref: true,
     },
     {
-      title: 'CLASS NAME',
+      title: 'TÊN LỚP',
       field: 'className',
     },
     {
-      title: 'DESCRIPTION',
+      title: 'MÔ TẢ',
       field: 'description',
     },
     {
-      title: 'STUDENT COUNT',
+      title: 'SỐ LƯỢNG HỌC SINH',
       field: 'studentCount',
       isCount: true,
     },
     {
-      title: 'CREATED AT',
+      title: 'NGÀY TẠO',
       field: 'createdAt',
       isFormattedDate: true,
     }
@@ -73,7 +73,7 @@ export class MyClassStudent implements OnInit {
     const studentId = this.#authService.userId;
 
     if (!studentId) {
-      this.#notificationService.show('User not authenticated!', 'error');
+      this.#notificationService.show('Người dùng chưa được xác thực!', 'error');
       this.isLoading = false;
       this.#cdr.markForCheck();
       return;
@@ -93,7 +93,7 @@ export class MyClassStudent implements OnInit {
         this.classes = [];
         this.totalElements = 0;
         this.isLoading = false;
-        this.#notificationService.show('Failed to load classes!', 'error');
+        this.#notificationService.show('Không thể tải danh sách lớp học!', 'error');
         this.#cdr.markForCheck();
       }
     });
@@ -110,10 +110,10 @@ export class MyClassStudent implements OnInit {
 
     compRef.instance.joinClassResult.subscribe((result: boolean) => {
       if (result) {
-        this.#notificationService.show('Join class request sent successfully', 'success');
+        this.#notificationService.show('Yêu cầu tham gia lớp học đã được gửi thành công', 'success');
         this.reloadData();
       } else {
-        this.#notificationService.show('Failed to send join class request', 'error');
+        this.#notificationService.show('Không thể gửi yêu cầu tham gia lớp học', 'error');
       }
     });
   }
