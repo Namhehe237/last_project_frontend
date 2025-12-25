@@ -164,7 +164,7 @@
 								}
 							} @else if (column.field === 'action') {
 								@if (getValue(data, 'hasViolations')) {
-									<button type="button" class="px-16 py-8 bg-blue-500 text-white rounded-4 hover:bg-blue-600 text-14" (click)="onActionClick('view-log', data)">Xem log</button>
+									<button type="button" class="__btn-1 text-14" (click)="onActionClick('view-log', data)">Xem log</button>
 								} @else {
 									<span class="text-gray-400 text-14">-</span>
 								}

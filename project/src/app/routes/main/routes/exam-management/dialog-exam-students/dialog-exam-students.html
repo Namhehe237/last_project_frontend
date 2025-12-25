@@ -22,13 +22,13 @@
     </app-table>
 
     @if (selectedStudent) {
-      <div class="border-t border-gray-200 mt-20">
-        <div class="flex justify-between items-center mb-12">
+      <div class="border-t border-gray-dd p-16">
+        <div class="flex justify-between items-center">
           <div>
             <div class="text-18 font-semibold">Log vi phạm - {{ selectedStudent.studentName }}</div>
             <div class="text-12 text-gray-500">Email: {{ selectedStudent.studentEmail }}</div>
           </div>
-          <button type="button" class="px-12 py-6 text-14 text-gray-600 hover:text-gray-800" (click)="clearSelectedStudent()">
+          <button type="button" class="__btn-2" (click)="clearSelectedStudent()">
             Đóng log
           </button>
         </div>

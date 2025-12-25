@@ -553,7 +553,6 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
       next: (grade) => {
         this.isSubmitting = false;
         this.#notification.show(`Điểm số: ${grade.score} (${grade.correctAnswers}/${grade.totalQuestions})`, 'success', 12000);
-        void this.#router.navigate(['/main/test-history']);
         this.#cdr.markForCheck();
       },
       error: () => {
@@ -562,6 +561,8 @@ export class DoTest implements OnInit, AfterViewInit, OnDestroy {
         this.#cdr.markForCheck();
       }
     });
+
+    await this.#router.navigate(['/main/test-history']);
   }
 
   // Drag and drop handlers for camera

@@ -45,7 +45,7 @@ export class DialogExamStudents {
   ];
 
   violationColumns: ColumnInterface[] = [
-    { title: 'Thời gian', field: 'timestamp' },
+    { title: 'Thời gian', field: 'timestamp', isFormattedDate: true },
     { title: 'Loại vi phạm', field: 'violationTypeLabel' },
     { title: 'Mô tả', field: 'message' },
     { title: 'Session ID', field: 'sessionId' },
